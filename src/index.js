@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import AppLayout from './containers/AppLayout/AppLayout'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import red from '@material-ui/core/colors/red';
 
 const theme = createMuiTheme({
   palette: {

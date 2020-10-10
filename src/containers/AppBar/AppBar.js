@@ -38,19 +38,12 @@ import ButtonBase from '@material-ui/core/ButtonBase'
 import Fab from '@material-ui/core/Fab'
 import FacebookIcon from '@material-ui/icons/Facebook'
 
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
-import Box from '@material-ui/core/Box';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 const useStyles = makeStyles((theme) => ({
+  appBar: {
+    backgroundColor: fade(theme.palette.common.white, 0.9),
+  },
   leftIcons: {
     display: 'flex',
   },
@@ -62,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 50,
     backgroundColor: 'transparent',
     display: 'inline-flex',
-    //border: '2px green solid',
   },
   searchIcon: {
     color: 'gray',
@@ -169,24 +161,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const theme = createMuiTheme((theme) => ({
-  overrides: {
-    // Style sheet name ⚛
-    MuiTab: {
-      // Name of the rule
-      root: {
-        // Some CSS
-        minWidth: '51px',
-        [theme.breakpoints.up('sm')]: {
-          minWidth: '30px',
-        },
-      },
-    },
-  },
-}
-));
-
-const StyledTab = withStyles({
+const StyledTab = withStyles((theme) => ({
       // Name of the rule
       root: {
         // Some CSS
@@ -199,7 +174,7 @@ const StyledTab = withStyles({
           backgroundColor: fade(theme.palette.common.black, 0.07),
         },
       },
-})(Tab);
+}))(Tab);
 
 const StyledTabs = withStyles({
   // Name of the rule
@@ -301,9 +276,9 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="sticky" style={{backgroundColor: '#FAFAFA'}}>
-        <Toolbar 
-            style={{padding: '6px 20px', margin: '0px', minHeight: '48px', 
+      <AppBar position="sticky" className={classes.appBar}>
+        <Toolbar
+            style={{padding: '6px 16px 3px 16px', margin: '0px', minHeight: '48px',
                     justifyContent: 'space-between',
                     flexGrow: 1,}} disableGutters >
             <Grid container spacing={3} style={{justifyContent:'space-between'}}>
@@ -448,8 +423,8 @@ export default function PrimarySearchAppBar() {
                     <AccountCircle/>
                   </IconButton>
                   <Typography>First Name</Typography> */}
-                  <ButtonBase >
-                  <Chip
+                  <ButtonBase>
+                    <Chip
                       avatar={<Avatar alt="Natacha" src={AvatarSrc} style={{    width: 32,
                         height: 32,}} />}
                       label="Patrocle"
