@@ -1,9 +1,50 @@
 import React, {Fragment} from 'react'
-import Grid from '@material-ui/core/Grid'
 import ListElement from '../../components/ListElement'
 import List from '@material-ui/core/List';
 import AvatarSrc from "./../../assets/avatar.jpg"
 import Divider from '@material-ui/core/Divider'
+
+const groups = [
+    {
+        name: "COVID-19 Information Centre",
+        description: '&#9679;1 new',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Friends",
+        description: '',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Groups",
+        description: '',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Video",
+        description: '2 new',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Events",
+        description: '2 new',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Memories",
+        description: "7 new video",
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Saved",
+        description: '',
+        avatar: AvatarSrc,
+    },
+    {
+        name: "Crisis Response",
+        description: '',
+        avatar: AvatarSrc,    },
+]
 
 const LeftRail = () => {
 
@@ -11,20 +52,12 @@ const LeftRail = () => {
             <Fragment>
                 <ListElement name={"Patrocle"} description='' avatar={AvatarSrc}/>
                 <List>
-                    <ListElement name={"COVID-19 Information Centre"} description='1 new' avatar={AvatarSrc}/>
-                    <ListElement name={"Friends"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Groups"} description='2 new' avatar={AvatarSrc}/>
-                    <ListElement name={"Video"} description='7 new video' avatar={AvatarSrc}/>
-                    <ListElement name={"Events"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Memories"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Saved"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Crisis Response"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Events"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Events"} description='' avatar={AvatarSrc}/>
-                    <ListElement name={"Events"} description='' avatar={AvatarSrc}/>
+                    {groups.map((group) => (
+                        <ListElement name={group.name} description={group.description} avatar={group.avatar}/>
+                    ))}
                 </List>
                 <ListElement name={"See more"} description='' avatar={AvatarSrc}/>
-                <Divider variant="inset" component="li" />
+                <Divider variant="middle"/>
                 <ListElement name={"See more"} description='' avatar={AvatarSrc}/>
             </Fragment>
         );

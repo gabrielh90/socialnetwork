@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -42,7 +42,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    backgroundColor: fade(theme.palette.common.white, 0.9),
+    backgroundColor: fade(theme.palette.common.white, 1),
   },
   leftIcons: {
     display: 'flex',
@@ -180,15 +180,8 @@ const StyledTabs = withStyles({
   // Name of the rule
   root: {
     // Some CSS
-    // minWidth: '32px',
-    // flex: '1 0 auto',
-    //justifyContent: 'spaced-between',
     overflow: 'hidden',
     width: '100%',
-    // padding: '6px 6px',
-    // [theme.breakpoints.up('sm')]: {
-    //   minWidth: '32px',
-    // },
   },
 })(Tabs);
 
@@ -275,7 +268,7 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-    <div className={classes.grow}>
+    <Fragment>
       <AppBar position="sticky" className={classes.appBar}>
         <Toolbar
             style={{padding: '6px 16px 3px 16px', margin: '0px', minHeight: '48px',
@@ -473,6 +466,6 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </div>
+    </Fragment>
   );
 }

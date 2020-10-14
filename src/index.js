@@ -13,6 +13,11 @@ const theme = createMuiTheme({
       main: '#F02849',
     },
   },
+  typography: {
+    h6: {
+      
+    }
+  }
 });
 
 ReactDOM.render(
