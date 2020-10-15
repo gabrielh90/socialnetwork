@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ButtonBase from '@material-ui/core/ButtonBase'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import Girl1 from '../../assets/girl1.jpg'
@@ -9,41 +10,14 @@ import Girl2 from '../../assets/girl2.webp'
 import ListElement from '../../components/ListElement'
 import IconButton from '@material-ui/core/IconButton'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import GridList from '@material-ui/core/GridList'
-import GridListTile from '@material-ui/core/GridListTile'
+import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button'
+import ThumbUpAltRoundedIcon from '@material-ui/icons/ThumbUpAltRounded';
+import ChatBubbleRoundedIcon from '@material-ui/icons/ChatBubbleRounded';
+import ReplyRoundedIcon from '@material-ui/icons/ReplyRounded';
+import AddComment from '../../containers/AddComment/AddComment'
+import PrintComment from '../../containers/PrintComment/PrintComment'
 
-const images = [
-    {
-    url: Girl1,
-    url1: Girl1,
-    title: 'Delicious Breakfast',
-    width: '100%',
-    },
-    {
-    url: Girl1,
-    url1: Girl1,
-    title: 'Tasty Burgers for me',
-    width: '100%',
-    },
-    {
-    url: Girl1,
-    url1: Girl1,
-    title: 'Nice Camera for photos',
-    width: '100%',
-    },
-    {
-    url: Girl1,
-    url1: Girl1,
-    title: 'Tasty Burgers',
-    width: '100%',
-    },
-    {
-    url: Girl1,
-    url1: Girl1,
-    title: 'Nice Camera',
-    width: '100%',
-    },
-];
 const tileData = [
     {
       img: Girl2,
@@ -57,18 +31,18 @@ const tileData = [
         author: 'author',
         cols: 2,
     },
-    {
-        img: Girl2,
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: Girl1,
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
+    // {
+    //     img: Girl2,
+    //     title: 'Image',
+    //     author: 'author',
+    //     cols: 2,
+    // },
+    // {
+    //     img: Girl1,
+    //     title: 'Image',
+    //     author: 'author',
+    //     cols: 2,
+    // },
 
 ];
 
@@ -77,9 +51,9 @@ const tileData = [
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        flexDirection: 'column',
         flex: '1 0 auto',
         flexWrap: 'nowrap',
-        justifyContent: 'space-between',
         minWidth: 300,
         borderRadius: 13,
         width: '100%',
@@ -259,39 +233,70 @@ const imgGrid = () => {
 
 return (
     <div className={classes.root}>
-        <Grid container direction="column">
-            <Grid item direction="row" style={{display: 'inline-flex'}}>
-                <ListElement style={{display: 'inline-flex'}}/>
-                <IconButton aria-label="delete" style={{display: 'inline-flex', minWidth: '60px'}}>
-                    <MoreHorizIcon />
-                </IconButton>
-            </Grid>
-            <Grid item style={{display: 'inline-flex'}}>
-                <Typography
-                    component="span"
-                    variant="body2"
-                    color="inherit"
-                    className={classes.imageTitle}
-                    style={{paddingLeft: '16px', paddingRight: '16px'}}
-                >
-                 Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
-                </Typography>
-            </Grid>
-            <Grid item>
-                    {imgGrid()}
-            </Grid>
-            <Grid item style={{display: 'inline-flex'}}>
-                <Typography
-                    component="span"
-                    variant="body2"
-                    color="inherit"
-                    className={classes.imageTitle}
-                    style={{paddingLeft: '16px', paddingRight: '16px'}}
-                >
-                 Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
-                </Typography>
-            </Grid>
-        </Grid>
+
+        <div>
+            <PrintComment/>
+        </div>
+
+        <div direction="row" style={{display: 'flex', justifyContent: 'space-around'}}>
+            <ListElement style={{display: 'inline-flex',}}/>
+            <IconButton aria-label="delete" style={{display: 'inline-flex', minWidth: '60px'}}>
+                <MoreHorizIcon />
+            </IconButton>
+        </div>
+        <div style={{display: 'flex'}}>
+            <Typography
+                component="span"
+                variant="body2"
+                color="inherit"
+                align="justify"
+                style={{paddingLeft: '16px', paddingRight: '16px',
+                        textIndent: '16px'}}
+            >
+                Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
+            </Typography>
+        </div>
+        <div>
+            {imgGrid()}
+        </div>
+        <div style={{display: 'flex'}}>
+            <Typography
+                component="span"
+                variant="body2"
+                color="inherit"
+                align="justify"
+                style={{paddingLeft: '16px', paddingRight: '16px',
+                        textIndent: '16px'}}
+            >
+                Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
+            </Typography>
+        </div>
+        <Divider variant="middle"  style={{margin: '8px'}}/>
+        <div style={{display: 'flex'}}>
+            <ButtonGroup disableElevation fullWidth variant="standard" color="primary"
+                style={{padding: '0px 16px'}}
+            >
+            <Button
+                startIcon={<ThumbUpAltRoundedIcon />}
+            >
+                Like
+            </Button>
+            <Button
+                color="primary"
+                startIcon={<ChatBubbleRoundedIcon/>}
+            >
+                Comment
+            </Button>
+            <Button
+                color="default"
+                startIcon={<ReplyRoundedIcon />}
+            >
+                Share
+            </Button>
+            </ButtonGroup>
+        </div>
+        
+        
     </div>
 );
 }

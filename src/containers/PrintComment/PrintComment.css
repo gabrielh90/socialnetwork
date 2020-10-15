@@ -1,0 +1,6 @@
+.div1 {
+    color: var(--main-bg-color);
+  }
+.commentSpan::first-line {
+  color: orange;
+}

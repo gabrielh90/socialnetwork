@@ -6,7 +6,7 @@ const CenterRail = () => {
 
     return (
             <Fragment>
-                <Story/>
+                {/* <Story/> */}
                 <Post/>
                 {/* <Story/> */}
             </Fragment>

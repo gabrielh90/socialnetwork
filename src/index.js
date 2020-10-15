@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import AppLayout from './containers/AppLayout/AppLayout'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import styles from './index.css'
 
 const theme = createMuiTheme({
   palette: {

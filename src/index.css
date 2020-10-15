@@ -1,0 +1,13 @@
+:global(.newpurple) {
+    color: red;
+}
+:global(*){
+    padding: 0px;
+    margin: 0px;
+}
+:root {
+    --main-bg-color: #43fa1f;
+}
+/* :global(*) {
+    color: red;
+} */

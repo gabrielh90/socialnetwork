@@ -6,6 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import {fade, makeStyles} from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme)=>({
     listItem: {
@@ -35,9 +36,12 @@ const ListElement = ({name, description, avatar, type}) => {
     return (
         <ListItem className = {classes.listItem}>
             <ListItemAvatar>
-                {typeof(avatar) === 'object' 
-                    ? <Icon className={classes.icon}>{avatar}</Icon>
-                    : <Avatar alt={avatar} src={avatar}/>}
+                { avatar === null ? 
+                      <Icon className={classes.icon}><AccountCircleIcon  style={{ fontSize: 48 }} /></Icon>
+                    : typeof(avatar) === 'object' 
+                    ? <Icon className={classes.icon}>{avatar}</Icon> //material ui icon
+                    : <Avatar alt={avatar} src={avatar}/> //path to the image
+                }
             </ListItemAvatar>
             <ListItemText 
                 disableTypography='true'
@@ -47,9 +51,11 @@ const ListElement = ({name, description, avatar, type}) => {
                         : name
                 }
                 secondary={
-                    <Typography variant='caption' color='primary'>
-                        {description}
-                    </Typography>
+                    typeof(name) === 'string' 
+                        ? <Typography variant='caption' color='primary'>
+                            {description}
+                          </Typography>
+                        : description
                 }
             />
         </ListItem>

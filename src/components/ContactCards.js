@@ -4,7 +4,7 @@ import AvatarSrc from "./../assets/avatar.jpg"
 import {Typography} from '@material-ui/core'
 import ListElement from './ListElement'
 
-const ContactsCard = () => (
+const ContactCards = () => (
         <Fragment>
             <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Contacts</Typography>
             <ListElement 
@@ -22,4 +22,4 @@ const ContactsCard = () => (
         </Fragment>
 )
 
-export default ContactsCard;
+export default ContactCards;
