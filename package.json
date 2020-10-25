@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.2.1",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
+    "axios": "^0.20.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.1.0",
@@ -52,9 +53,10 @@
     "react-app-polyfill": "^1.0.6",
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-test-renderer": "^16.13.1",
     "resolve": "1.15.0",
-    "resolve-url-loader": "3.1.1",
+    "resolve-url-loader": "^3.1.2",
     "sass-loader": "8.0.2",
     "semver": "6.3.0",
     "style-loader": "0.23.1",
@@ -140,5 +142,15 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.100.2/Bonobo.Git.Server/facebook_replica.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

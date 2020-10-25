@@ -5,7 +5,8 @@ import ContactsCard from '../../components/ContactCards'
 import List from '@material-ui/core/List';
 import {Typography} from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
-import AddIcon from '@material-ui/icons/Add';
+import AddRoundedIcon from '@material-ui/icons/AddRounded'
+
 const RightRail = () => {
     return (
         <Fragment>
@@ -19,7 +20,7 @@ const RightRail = () => {
             <Divider variant='middle'/>
             <List>
                 <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Group conversations</Typography>
-                <ListElement name={'Create New Group'} description='' avatar={<AddIcon/>}/>
+                <ListElement name={'Create New Group'} description='' avatar={<AddRoundedIcon/>}/>
             </List>
         </Fragment>
         );
@@ -50,6 +51,6 @@ export default RightRail;
             //     </Grid>
             //     <Grid item xs={12}>
             //         <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Group conversations</Typography>
-            //         <ListElement name={'Create New Group'} description='' avatar={<AddIcon/>}/>
+            //         <ListElement name={'Create New Group'} description='' avatar={<AddRoundedIcon/>}/>
             //     </Grid>
             // </Grid> */}

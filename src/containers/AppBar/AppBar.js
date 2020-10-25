@@ -26,7 +26,7 @@ import PeopleRoundedIcon from '@material-ui/icons/PeopleRounded'
 import GamepadRoundedIcon from '@material-ui/icons/GamepadRounded'
 
 import AccountCircle from '@material-ui/icons/AccountCircle'
-import AddIcon from '@material-ui/icons/Add'
+import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import QuestionAnswerRoundedIcon from '@material-ui/icons/QuestionAnswerRounded'
 import NotificationsRoundedIcon from '@material-ui/icons/NotificationsRounded'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -35,8 +35,6 @@ import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import AvatarSrc from "./../../assets/avatar.jpg"
 import ButtonBase from '@material-ui/core/ButtonBase'
-import Fab from '@material-ui/core/Fab'
-import FacebookIcon from '@material-ui/icons/Facebook'
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -95,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: 'inherit',
+    width: '100%',
   },
   inputInput: {
     // border: '2px blue solid',
@@ -149,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     fontSize: 24,
     height: '100%',
-    // // color: 'gray',
+    // color: 'gray',
     background: fade(theme.palette.common.black, 0.04),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.black, 0.07),
@@ -185,7 +184,7 @@ const StyledTabs = withStyles({
   },
 })(Tabs);
 
-export default function PrimarySearchAppBar() {
+export default function LogInAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -196,14 +195,13 @@ export default function PrimarySearchAppBar() {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -230,7 +228,7 @@ export default function PrimarySearchAppBar() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'buttom', horizontal: 'left' }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -430,7 +428,7 @@ export default function PrimarySearchAppBar() {
                     className={classes.roundIcon}
                   >
                     <Badge badgeContent={3} color="secondary">
-                      <AddIcon />
+                      <AddRoundedIcon />
                     </Badge>
                   </IconButton>
                   <IconButton 

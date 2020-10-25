@@ -1,126 +1,120 @@
 import React from 'react'
-import { fade, makeStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardMedia from '@material-ui/core/CardMedia'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
-import Avatar from '@material-ui/core/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import { red } from '@material-ui/core/colors'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import ShareIcon from '@material-ui/icons/Share'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import {fade, makeStyles} from '@material-ui/core/styles'
+import Icon from '@material-ui/core/Icon'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import PropTypes from 'prop-types';
+import IconButton from '@material-ui/core/IconButton';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
 import InputBase from '@material-ui/core/InputBase'
-import Grid from '@material-ui/core/Grid'
 import SearchIcon from '@material-ui/icons/Search'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import ListElement from './../../components/ListElement'
 
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 445,
-  },
-  classHeader:{
-      padding : `${theme.spacing(1)}px`,
-      paddingLeft:  `${theme.spacing(2)}px`,
-      paddingRight:  `${theme.spacing(2)}px`,
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+const useStyles = makeStyles((theme)=>({
+    listItem: {
+        borderRadius: 5,
     },
-    marginRight: 0,
-    marginLeft: 0,
-    width: 'auto',
-  },
-  searchIcon: {
-    height: '100%',
-    position: 'relative',
-    display: 'inline-block',
-    alignItems: 'left',
-    justifyContent: 'left',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    position:'relative',
-    
-    display: 'inline-block',
-    border: '2px blue solid',
-    borderRadius: 50,
-    backgroundColor: fade(theme.palette.common.black, 0.02),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.black, 0.07),
+    icon: {
+        backgroundColor: fade(theme.palette.common.black, 0.09),
+        borderRadius: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '40px',
+        width: '40px',
+        marginRight: theme.spacing(1),
     },
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `${theme.spacing(2)}px`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-export default function AddComment() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
+    itemTextPrimary: {
+        display: 'flex',
+        backgroundColor: 'var(--gray-input)',
+        '&:hover': {
+          backgroundColor: 'var(--gray-hover-input)',
+        },
+        borderRadius: 25,
+        width: '100%',
+        paddingRight: `${theme.spacing(2)}px`,
         
-        
-   {/* //     <ListElement name={"See more"} description='' avatar={AvatarSrc}/> */}
+        paddingLeft: `${theme.spacing(2)}px`,
+    },
+    rootInput: {
+      width: '100%',
+      display: 'inline-flex',
+      padding: theme.spacing(1, 1, 1, 0),
+      transition: theme.transitions.create('width'),
+      border: '0px',
+      backgroundColor: 'transparent',
+      // fontWeight: theme.typography.fontWeightMedium,
+      // fontFamily: theme.typography.fontFamily,
+      // fontSize: '13px',
+    },
+    searchIconInput: {
+      height: '100%',
+      // pointerEvents: 'none',
+      display: 'inline-flex',
+      alignSelf: 'center',
+      color: 'gray',
+    },
+}))
 
-      <CardContent className={classes.classHeader}>
 
-            <div className={classes.search}>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    className={classes.searchIcon}
-                >
-                    <KeyboardBackspaceIcon/>
-                </IconButton>
-                <InputBase
-                    placeholder="Search…"
-                    classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                />
-            </div>
-            {/* <List className={classes.list}>
-            {messages.map(({ id, primary, secondary, person }) => (
-                <React.Fragment key={id}>
-                {id === 1 && <ListSubheader className={classes.subheader}>Today</ListSubheader>}
-                {id === 3 && <ListSubheader className={classes.subheader}>Yesterday</ListSubheader>}
-                <ListItem button>
-                    <ListItemAvatar>
-                    <Avatar alt="Profile Picture" src={person} />
-                    </ListItemAvatar>
-                    <ListItemText primary={primary} secondary={secondary} />
-                </ListItem>
-                </React.Fragment>
-            ))}
-            </List> */}
-      </CardContent>
-    </div>
-  );
+const AddComment = ({name, comment, avatar, type, setFocusInput}) => {
+    const classes = useStyles()
+
+    let fName = <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div className={classes.itemTextPrimary}>
+                     
+                      <input
+                        placeholder="Write a comment..."
+                        className={classes.rootInput}
+                        ref={(ip) => setFocusInput(ip)}
+                      />
+                      <div className={classes.searchIconInput}>
+                        <SearchIcon />
+                      </div>
+                    </div>
+                </div>
+
+
+    return (
+        <>
+        <ListItem className = {classes.listItem}>
+            <ListItemAvatar style={{disply: 'grid', alignSelf: 'self-start', minWidth: '20px',}}>
+                { avatar === null ? 
+                      <Icon className={classes.icon}><AccountCircleIcon  style={{ fontSize: 48 }} /></Icon>
+                    : typeof(avatar) === 'object' 
+                    ? <Icon className={classes.icon}>{avatar}</Icon> //material ui icon
+                    : <Avatar className={classes.icon} alt={avatar} src={avatar}/> //path to the image
+                }
+            </ListItemAvatar>
+            
+            <ListItemText 
+                style={{margin: '0px'}}
+                disableTypography='true'
+                primary ={fName}
+                secondary={ ''
+                    // typeof(name) === 'string' 
+                    //     ? <Typography variant='caption' color='primary'>
+                    //         {description}
+                    //       </Typography>
+                    //     : description
+                }
+            />
+            
+        </ListItem>
+                
+        </>
+    );
 }
+AddComment.defaultProps = {
+    name: 'Pricolici',
+    type: 'standard',
+    avatar: null
+}
+AddComment.propTypes = {
+    comment: PropTypes.bool,
+}
+export default AddComment;

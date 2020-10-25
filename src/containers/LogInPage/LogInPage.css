@@ -1,0 +1,68 @@
+.rootPage {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    margin: 0 20%;
+    /* height: 20%; */
+    position: absolute;
+    top: 50vh;
+    transform: translateY(-50%);
+}
+.helper {
+    /* border: 1px red solid; */
+    display: flex;
+    flex-flow: column;
+    width: 60%;
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 32pxs;
+    align-self:center
+}
+.helper .logo {
+    color: var(--blue);
+    font-weight: 900;
+    font-size: 48px;
+    text-transform: lowercase;
+}
+.rootCard {
+    display: flex;
+    background-color: white;
+    /* border: 1px blue solid; */
+    box-shadow: 0px 0px 10px 1px gray;
+    border-radius: 10px;
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    padding: 16px;
+}
+.input {
+    font-size: 17px;
+    border-radius: 10px;
+    color: rgba(200, 200, 200, 1);
+    border: 1px rgba(200, 200, 200, 1) solid;
+    padding: 14px 16px;
+    margin: 0px 0px 8px 0px;
+}
+
+.input:focus {
+    border-radius: 10px;
+    outline: 0px;
+    border: 0px var(--blue) solid;
+    box-shadow: 0px 0px 1px 2px var(--blue);
+}
+.divider {
+    border-width: 0px;
+    box-shadow: 0px 0px 1px 1px lightgray;
+    max-height: 0px;
+    margin: 12px 0px;
+}
+.navLink{
+    color: var(--blue);
+    padding-top: 8px;
+    text-align: center;
+    text-decoration: none;
+    outline: 0px;
+}
+.navLink:hover{
+    text-decoration: underline;
+}

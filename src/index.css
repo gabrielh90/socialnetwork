@@ -4,10 +4,24 @@
 :global(*){
     padding: 0px;
     margin: 0px;
-}
-:root {
-    --main-bg-color: #43fa1f;
+    font-family: var(--root-font-family);
 }
 /* :global(*) {
     color: red;
 } */
+:root {
+    --main-bg-color: #43fa1f;
+    --primary-color: rgba(25, 181, 254, 1);
+    --secondary-color: #F02849;
+    --blue: #166FE5;
+    --green: #36A420;
+    --gray-input: #EEE;
+    --gray-hover-input: #E6E6E6;
+    --gray-icon: #888;
+    --gray-border: #BBB;
+    --root-font-family: "Roboto", "Helvetica", "Arial", sans-serif;     
+}
+
+html, body, #app, #app>div {
+    height: 100%
+  }

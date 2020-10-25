@@ -2,11 +2,9 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton';
 import Girl1 from '../assets/girl1.jpg'
-import Paper from '@material-ui/core/Paper'
-import Grow from '@material-ui/core/Grow'
+import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded';
 
 const images = [
     {
@@ -49,6 +47,7 @@ const images = [
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        position: 'relative',
         display: 'flex',
         flex: '1 0 auto',
         flexWrap: 'nowrap',
@@ -139,6 +138,28 @@ const useStyles = makeStyles((theme) => ({
         minWidth: '14px',
         display: 'inline-flex',
       },
+    roundIcon: {
+      display: 'flex',
+      position: 'absolute',
+      right: '0px',
+      top: '50%',
+      transform: 'translate(50%, -50%)',
+      border: '1px var(--gray-border) solid',
+      boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
+      margin: theme.spacing(0.5),
+      padding: theme.spacing(1.5),
+      fontSize: 24,
+      zIndex: 2,
+      // height: '100%',
+      color: 'var(--gray-icon)',
+      background: 'white',
+      '&:hover': {
+        backgroundColor: 'var(--gray-hover-input)',
+      },
+      // [theme.breakpoints.up('lg')]: {
+      //   display: 'none',
+      // },
+    },
 }));
 
 export default function ButtonBases() {
@@ -184,7 +205,12 @@ return (
                 </span>
             </ButtonBase>
         ))}
-
+            <IconButton 
+              aria-label="show 4 new mails" color="inherit"
+              className={classes.roundIcon}
+            >
+                <ArrowForwardRoundedIcon />
+            </IconButton>
     </div>
 );
 }

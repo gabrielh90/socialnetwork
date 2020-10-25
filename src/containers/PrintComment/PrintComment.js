@@ -1,30 +1,8 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import { fade, makeStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardMedia from '@material-ui/core/CardMedia'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
-import Avatar from '@material-ui/core/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import ShareIcon from '@material-ui/icons/Share'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
-import InputBase from '@material-ui/core/InputBase'
-import Grid from '@material-ui/core/Grid'
-import SearchIcon from '@material-ui/icons/Search'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import CommentCard from './../../components/CommentCard'
-import styles from './PrintComment.css'
 
+import CommentCard from './../../components/CommentCard'
+import AddComment from '../AddComment/AddComment'
 const useStyles = makeStyles((theme) => ({
   root: {
 //    maxWidth: 445,
@@ -87,17 +65,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddComment({name, comment} ) {
+export default function PrintComment( props ) {
   const classes = useStyles();
+  const {name, comment} = props
   return (
     <div className={classes.root}>
       <CommentCard name={name} comment={comment} avatar={null}/>
       <CommentCard name={name} comment={comment} avatar={null}/>
+      <CommentCard name={name} comment={'asdasdjhagkdj'} avatar={null}/>
+      <AddComment setFocusInput={props.setFocusInput}/>
     </div>
   );
 }
 
-AddComment.defaultProps = {
+PrintComment.defaultProps = {
     name: `Azorel`,
     comment: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been' \
      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled \

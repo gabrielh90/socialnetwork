@@ -1,0 +1,45 @@
+/* listItem {
+    borderRadius: 5,
+}
+icon {
+    backgroundColor: fade(theme.palette.common.black, 0.09),
+    borderRadius: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '40px',
+    width: '40px',
+    marginRight: theme.spacing(1),
+}
+itemTextPrimary {
+    padding: theme.spacing(1),
+    backgroundColor: fade(theme.palette.common.black, 0.07),
+    borderRadius: 15,
+}
+styleName {
+    fontWeight: theme.typography.fontWeightMedium,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '13px',
+}
+styleComment {
+    fontWeight: theme.typography.fontWeightRegular,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '14px',
+}
+itemTextSecondary {
+    fontWeight: theme.typography.fontWeightMedium,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '11px',
+}
+roundIcon {
+    //border: '2px green solid',
+    margin: theme.spacing(0.5),
+    padding: theme.spacing(1),
+    fontSize: 24,
+    height: '100%',
+    color: 'gray',
+    background: fade(theme.palette.common.black, 0.04),
+    '&:hover' {
+      backgroundColor: fade(theme.palette.common.black, 0.07),
+    }
+} */

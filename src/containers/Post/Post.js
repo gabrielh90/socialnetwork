@@ -1,9 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import ButtonBase from '@material-ui/core/ButtonBase'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
 import Girl1 from '../../assets/girl1.jpg'
 import Girl2 from '../../assets/girl2.webp'
 
@@ -12,11 +10,18 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
-import ThumbUpAltRoundedIcon from '@material-ui/icons/ThumbUpAltRounded';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatBubbleRoundedIcon from '@material-ui/icons/ChatBubbleRounded';
-import ReplyRoundedIcon from '@material-ui/icons/ReplyRounded';
-import AddComment from '../../containers/AddComment/AddComment'
+import ReplyRoundedIcon from '@material-ui/icons/ReplyRounded'
 import PrintComment from '../../containers/PrintComment/PrintComment'
+import LikeCard from '../../components/LikeCard'
+
+import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined'
+import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
+import SentimentDissatisfiedOutlinedIcon from '@material-ui/icons/SentimentDissatisfiedOutlined'
+import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined'
+import SentimentVeryDissatisfiedOutlinedIcon from '@material-ui/icons/SentimentVeryDissatisfiedOutlined'
+import SentimentVerySatisfiedOutlinedIcon from '@material-ui/icons/SentimentVerySatisfiedOutlined'
 
 const tileData = [
     {
@@ -46,7 +51,32 @@ const tileData = [
 
 ];
 
-
+const emotions = [
+    {
+        name: 'like',
+        icon: ThumbUpAltOutlinedIcon,
+    },
+    {
+        name: 'favorite',
+        icon: FavoriteBorderOutlinedIcon,
+    },
+    {
+        name: 'satisfied',
+        icon: SentimentSatisfiedOutlinedIcon,
+    },
+    {
+        name: 'dissatisfied',
+        icon: SentimentDissatisfiedOutlinedIcon,
+    },
+    {
+        name: 'shocked',
+        icon: SentimentVeryDissatisfiedOutlinedIcon,
+    },
+    {
+        name: 'surprise',
+        icon: SentimentVerySatisfiedOutlinedIcon,
+    },
+]
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -153,6 +183,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonBases() {
 const classes = useStyles();
+const [emotion, setEmotion] = useState({name: 'Like', icon: ThumbUpAltOutlinedIcon, selected: -1})
+const [showEmotionsMenu, setShowEmotionsMenu] = useState(false)
+const [delayEmotionMenu, setDelayEmotionMenu] = useState(false)
+const [focusInput, setFocusInput] = useState(null)
 const imgGrid = () => {
     //return <div>asdasdada</div>
     if(tileData.length === 1) {
@@ -230,16 +264,34 @@ const imgGrid = () => {
                 </div>
     }
 }
-
+const handleMouseClick = (event, emotionType) => {
+    setEmotion(emotion.selected === -1 ? emotionType : 
+                emotion.selected !== emotionType.selected ? emotionType : {...emotions[0], selected: -1})
+    // console.log(event.target)
+    console.log('emotionType: ' + emotionType.name)
+    clearTimeout(delayEmotionMenu)
+    setShowEmotionsMenu(false)
+}
+const handleMouseEnter = () => {
+    console.log('mouse enter')
+    clearTimeout(delayEmotionMenu)
+    setDelayEmotionMenu(setTimeout(()=> {
+                            setShowEmotionsMenu(true)
+                            clearTimeout(delayEmotionMenu)
+                        }, 1000))
+}
+const handleMouseLeave = () => {
+    console.log('mouse leave')
+    clearTimeout(delayEmotionMenu)
+    setDelayEmotionMenu(setTimeout(() => {
+        
+        setShowEmotionsMenu(false)
+    }, 1000))
+}
 return (
     <div className={classes.root}>
-
-        <div>
-            <PrintComment/>
-        </div>
-
-        <div direction="row" style={{display: 'flex', justifyContent: 'space-around'}}>
-            <ListElement style={{display: 'inline-flex',}}/>
+        <div direction="row" style={{display: 'flex', justifyContent: 'space-around', margin: '0px 16px'}}>
+            <ListElement style={{display: 'inline-flex', padding: '0px' }}/>
             <IconButton aria-label="delete" style={{display: 'inline-flex', minWidth: '60px'}}>
                 <MoreHorizIcon />
             </IconButton>
@@ -271,32 +323,43 @@ return (
                 Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
             </Typography>
         </div>
-        <Divider variant="middle"  style={{margin: '8px'}}/>
-        <div style={{display: 'flex'}}>
-            <ButtonGroup disableElevation fullWidth variant="standard" color="primary"
-                style={{padding: '0px 16px'}}
-            >
+        <Divider variant="middle"  style={{margin: '4px'}}/>
+        <div style={{display: 'flex', position: 'relative', width: '100%', padding: '0px 16px'}} >
             <Button
-                startIcon={<ThumbUpAltRoundedIcon />}
+                onClick={(e) => (handleMouseClick(e, emotion.selected === -1 ? {...emotions[0], selected: 0} : emotion ))}
+                startIcon={<emotion.icon/>}
+                style={{color: emotion.selected === -1 ? 'gray' : 'var(--primary-color)', display: 'inline-flex', width: '32%'}}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
-                Like
+                {emotion.name}
             </Button>
             <Button
-                color="primary"
+                style={{color: 'gray', display: 'inline-flex', width: '32%'}}
+                onClick={() => {focusInput.focus()}}
                 startIcon={<ChatBubbleRoundedIcon/>}
             >
                 Comment
             </Button>
             <Button
-                color="default"
+                style={{color: 'gray', display: 'inline-flex', width: '32%'}}
                 startIcon={<ReplyRoundedIcon />}
             >
                 Share
             </Button>
-            </ButtonGroup>
+            {showEmotionsMenu && <LikeCard 
+                                        emotions={emotions}
+                                        emotionType={emotion}
+                                        handleMouseClick={handleMouseClick}
+                                        handleMouseEnter={handleMouseEnter}
+                                        handleMouseLeave={handleMouseLeave}
+                                        />}
         </div>
+        <Divider variant="middle"  style={{margin: '4px'}}/>
         
-        
+        <div>
+            <PrintComment setFocusInput={setFocusInput}/>
+        </div>
     </div>
 );
 }
