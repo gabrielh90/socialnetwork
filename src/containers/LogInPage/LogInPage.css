@@ -2,11 +2,8 @@
     display: flex;
     align-content: center;
     flex-direction: row;
-    margin: 0 20%;
-    /* height: 20%; */
-    position: absolute;
-    top: 50vh;
-    transform: translateY(-50%);
+    padding: 0 20%;
+    height: 100vh;
 }
 .helper {
     /* border: 1px red solid; */
@@ -20,32 +17,37 @@
 }
 .helper .logo {
     color: var(--blue);
-    font-weight: 900;
-    font-size: 48px;
+    font-weight: bolder;
+    font-size: 64px;
     text-transform: lowercase;
 }
 .rootCard {
     display: flex;
     background-color: white;
     /* border: 1px blue solid; */
-    box-shadow: 0px 0px 10px 1px gray;
+    box-shadow: 0px 0px 7px 1px gray;
     border-radius: 10px;
     display: flex;
     width: 40%;
     flex-direction: column;
     padding: 16px;
+    margin: auto;
+}
+.rootForm {
+    display: flex;
+    flex-direction: column;
 }
 .input {
     font-size: 17px;
-    border-radius: 10px;
-    color: rgba(200, 200, 200, 1);
+    border-radius: 8px;
+    color: rgba(150, 150, 150, 1);
     border: 1px rgba(200, 200, 200, 1) solid;
-    padding: 14px 16px;
-    margin: 0px 0px 8px 0px;
+    padding: 16px 16px;
+    margin: 0px 0px 12px 0px;
 }
 
 .input:focus {
-    border-radius: 10px;
+    border-radius: 8px;
     outline: 0px;
     border: 0px var(--blue) solid;
     box-shadow: 0px 0px 1px 2px var(--blue);
@@ -58,10 +60,12 @@
 }
 .navLink{
     color: var(--blue);
-    padding-top: 8px;
+    padding: 12px 0px;
     text-align: center;
     text-decoration: none;
     outline: 0px;
+    font-size: 14px;
+    font-weight: 400;
 }
 .navLink:hover{
     text-decoration: underline;

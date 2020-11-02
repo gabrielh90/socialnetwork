@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppLayout from './containers/AppLayout/AppLayout'
+import {applyMiddleware, compose, createStore} from 'redux'
+import thunk from 'redux-thunk';
+import {Provider} from 'react-redux'
+import App from './containers/App'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import styles from './index.css'
 import {BrowserRouter} from 'react-router-dom'
+import rootReducer from './store/reducers'
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -21,13 +26,21 @@ const theme = createMuiTheme({
   }
 });
 
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
+const store = createStore(rootReducer, composeEnhancers(
+  applyMiddleware(thunk)
+));
+// const store = createStore(rootReducer);
+
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-    <ThemeProvider theme={theme}>
-      <AppLayout />
-    </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

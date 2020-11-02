@@ -27,30 +27,3 @@ const RightRail = () => {
 }
 
 export default RightRail;
-
- {/* // <Grid container>
-            //     <Grid item xs={12}>
-            //         <BirthdayCard title='Birthday'/>
-            //     </Grid>
-            //     <Grid item xs={12}>
-            //         <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Contacts</Typography>
-            //         <List>
-            //             <ListElement 
-            //                 name='Pricolici' 
-            //                 description='birthday' 
-            //                 avatar={AvatarSrc}/>
-            //             <ListElement 
-            //                 name='Pricolici' 
-            //                 description='birthday' 
-            //                 avatar={AvatarSrc}/>
-            //             <ListElement 
-            //                 name='Pricolici' 
-            //                 description='birthday' 
-            //                 avatar={AvatarSrc}/>
-            //         </List>
-            //     </Grid>
-            //     <Grid item xs={12}>
-            //         <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Group conversations</Typography>
-            //         <ListElement name={'Create New Group'} description='' avatar={<AddRoundedIcon/>}/>
-            //     </Grid>
-            // </Grid> */}

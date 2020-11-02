@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
+
 import styles from './LogInPage.css'
 import Button from '@material-ui/core/Button'
 import {withStyles} from '@material-ui/core/styles'
 import { green, blue } from '@material-ui/core/colors';
 import {NavLink} from 'react-router-dom'
+import * as actions from '../../store/actions'
+
 
 const LogInButton = withStyles((theme) => ({
     root: {
@@ -17,6 +22,7 @@ const LogInButton = withStyles((theme) => ({
         fontSize: '18px',
         maxHeight: '48px',
         textTransform: 'none',
+        marginBottom: '12px',
     },
 }))(Button)
 
@@ -34,30 +40,73 @@ const SingUpButton = withStyles((theme) => ({
         textTransform: 'none',
         width: 'auto',
         margin: 'auto',
+        marginTop: '12px',
+        marginBottom: '12px',
     }
 }))(Button)
-const LogInPage = () => {
-    return <div className={styles.rootPage}>
+
+class LogInPage extends Component {
+    state = {
+        controls: {
+            email: {
+                value: ''
+            },
+            password: {
+                value: ''
+            }
+        }
+    }
+
+    inputChangedHandler  = ( event, controlName) => {
+        // console.log(event.target.value + ' ' + controlName)
+        const updatedControls = {...this.state.controls, 
+                                        [controlName]: {
+                                            ...this.state.controls[controlName], 
+                                            value: event.target.value
+                                        }
+                                }
+        this.setState({ controls: updatedControls })
+    }
+
+    submitHandler = (event) => {
+        event.preventDefault()
+       // console.log(this.state.controls)
+       this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value)
+    }
+
+    render() {
+        let authRedirect = null;
+        if(!authRedirect) {
+            authRedirect = <Redirect to={this.props.authRedirect} />
+        }
+        return <div className={styles.rootPage}>
+            {authRedirect}
         <div className={styles.helper}>
             <div className={styles.logo}>Facebook</div>
             Facebook helps you connect and share with the people in your life.
         </div>
         <div className={styles.rootCard}>
-            <input 
-                className={styles.input} 
-                placeholder='Email address or phone number'
-            />
-            <input
-                className={styles.input} 
-                type='password' 
-                placeholder='Password'
-            />
-            <LogInButton
-                variant="contained"
-
-            >
-                Log In
-            </LogInButton>
+            <form 
+                onSubmit={this.submitHandler}
+                className={styles.rootForm}>
+                <input 
+                    className={styles.input} 
+                    placeholder='Email address or phone number'
+                    onChange={(event) => this.inputChangedHandler(event, 'email')}
+                />
+                <input
+                    className={styles.input}
+                    type='password' 
+                    placeholder='Password'
+                    onChange={(event) => this.inputChangedHandler(event, 'password')}
+                />
+                <LogInButton
+                    type='submit'
+                    variant="contained"
+                >
+                    Log In
+                </LogInButton>
+            </form>
             <NavLink 
                 to='/login'
                 className={styles.navLink}
@@ -74,6 +123,19 @@ const LogInPage = () => {
             </SingUpButton>
         </div>
     </div>
+    }
 }
 
-export default LogInPage;
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.token !== null,
+        authRedirect: state.auth.authRedirectPath
+    }
+}
+const mapDispatchtoProps = dispatch => {
+    return {
+        onAuth: (email, pass) => dispatch( actions.authRequest(email, pass))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchtoProps)(LogInPage);

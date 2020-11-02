@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Typography from '@material-ui/core/Typography'
 import Girl1 from '../../assets/girl1.jpg'
 import Girl2 from '../../assets/girl2.webp'
@@ -10,7 +9,6 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatBubbleRoundedIcon from '@material-ui/icons/ChatBubbleRounded';
 import ReplyRoundedIcon from '@material-ui/icons/ReplyRounded'
 import PrintComment from '../../containers/PrintComment/PrintComment'
