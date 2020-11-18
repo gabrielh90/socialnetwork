@@ -1,0 +1,7 @@
+dynamic logout: send from time to time a wake up/still up action(eg: onclick) to update the logout timeout
+check server for logot valid token and timeout
+add maxim login attempt, after that increment with timeStop=30min/60min/12hours/24hours...
+hash user and pass before sending the login request into the network
+
+
+****TESTING****

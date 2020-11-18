@@ -1,0 +1,77 @@
+.smallSizeForm {
+    --form-size: 4px;
+}
+
+.rootForm {
+    box-sizing: border-box;
+    display: grid;
+    --noOfColumns: 12;
+    /* grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); */
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 10px;
+    row-gap: 10px;
+
+    
+    background-color: white;
+    padding: 15px;
+    width: 400px;
+    margin: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+}
+.formHeader {
+    grid-column: 1 / span var(--noOfColumns);
+    font-size: xx-large;
+    font-weight: 600;
+}
+.formHeader span{
+    display: flex;
+    font-size: medium;
+    font-weight: 400;
+    color: gray;
+}
+.line {
+    grid-column: 1 / span var(--noOfColumns);
+    width: 400px;
+    height: 1px;
+    background-color: lightgray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    left: -15px;
+}
+
+.input {
+    grid-column-end: span var(--noOfColumns);
+    /* display: grid; */
+    /* max-width: 50px; */
+    width: 100%;
+    font-size: 17px;
+    border-radius: 8px;
+    color: rgba(150, 150, 150, 1);
+    border: 1px rgba(200, 200, 200, 1) solid;
+    border: 1px green solid;
+    padding: var(--form-size) 16px;
+}
+
+.input:focus {
+    border-radius: 8px;
+    outline: 0px;
+    border: 0px var(--blue) solid;
+    box-shadow: 0px 0px 1px 2px var(--blue);
+}
+.loginError{
+    grid-column: 1 / span 12;
+    color: var(--error);
+    text-align: center;
+    margin: 0px 0px 12px 0px;
+}
+.inputInvalid{
+    border: 1px var(--error) solid;
+}
+.inputSpanHalf {
+    grid-column-end: span calc(var(--noOfColumns)/2);
+}
+.inputSpan3 {
+    grid-column-end: span calc(var(--noOfColumns)/3);
+}

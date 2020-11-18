@@ -5,6 +5,7 @@
     padding: 0px;
     margin: 0px;
     font-family: var(--root-font-family);
+    box-sizing: border-box;
 }
 /* :global(*) {
     color: red;
@@ -19,7 +20,8 @@
     --gray-hover-input: #E6E6E6;
     --gray-icon: #888;
     --gray-border: #BBB;
-    --root-font-family: "Roboto", "Helvetica", "Arial", sans-serif;     
+    --error: #F02849;   
+    --root-font-family: "Roboto", "Helvetica", "Arial", sans-serif; 
 }
 
 html, body, #app, #app>div {

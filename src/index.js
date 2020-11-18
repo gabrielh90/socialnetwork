@@ -8,6 +8,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import styles from './index.css'
 import {BrowserRouter} from 'react-router-dom'
 import rootReducer from './store/reducers'
+import FormAcc from './formacc.js'
 
 const theme = createMuiTheme({
   palette: {
@@ -38,6 +39,7 @@ ReactDOM.render(
       <BrowserRouter>
       <ThemeProvider theme={theme}>
         <App />
+        <FormAcc/>
       </ThemeProvider>
       </BrowserRouter>
     </Provider>

@@ -1,0 +1,32 @@
+.smallSizeForm {
+    --form-size: 4px;
+}
+
+.rootForm {
+    display: flex;
+    flex-direction: column;
+}
+.input {
+    font-size: 17px;
+    border-radius: 8px;
+    color: rgba(150, 150, 150, 1);
+    border: 1px rgba(200, 200, 200, 1) solid;
+    border: 1px green solid;
+    padding: var(--form-size) 16px;
+    margin: 0px 0px calc(var(--form-size)*2/3)  0px;
+}
+
+.input:focus {
+    border-radius: 8px;
+    outline: 0px;
+    border: 0px var(--blue) solid;
+    box-shadow: 0px 0px 1px 2px var(--blue);
+}
+.loginError{
+    color: var(--error);
+    text-align: center;
+    margin: 0px 0px 12px 0px;
+}
+.inputInvalid{
+    border: 1px var(--error) solid;
+}
