@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
 
 import styles from './RecoverAccountForm.css'
 import Button from '@material-ui/core/Button'
 import {withStyles} from '@material-ui/core/styles'
 import { blue } from '@material-ui/core/colors';
-import * as actions from '../../store/actions'
-import {checkValidity} from '../../shared/utility'
-import axios from 'axios'
+import {checkValidity} from '../../shared/utility';
+import axios from 'axios';
+import ListElement from '../ListElement';
+import { Typography } from '@material-ui/core';
+import { Fragment } from 'react';
 
 const SubmitButton = withStyles((theme) => ({
     root: {
@@ -23,8 +24,7 @@ const SubmitButton = withStyles((theme) => ({
         textTransform: 'none',
         marginBottom: '12px',
     },
-}))(Button)
-
+}))(Button);
 
 class RecoverAccountForm extends Component {
     state = {
@@ -37,17 +37,21 @@ class RecoverAccountForm extends Component {
                 value: '',
                 elemConfig: {
                     type: 'input',
-                    placeholder: 'Email address or phone number'
+                    placeholder: 'Email address'
                 },
                 validation: {
                     required: true,
                     minLength: 6,
                     isEmail: true
                 },
-                valid: false
+                valid: false,
+                touched: false
             },
         },
-
+        userAvatar: null,
+        firstName: '',
+        lastName: '',
+        email: ''
     }
     
     inputChangedHandler  = ( event, categoryName, controlName ) => {
@@ -62,8 +66,20 @@ class RecoverAccountForm extends Component {
         this.setState({ [categoryName] : updatedControls })
         // console.log(this.state)
     }
+    focusInputHandler = (event, categoryName, controlName) => {
+        event.preventDefault();
+        this.props.focusFormHandler(event, 'RecoverAccountForm');
+        const updatedControls = {
+            ...this.state[categoryName], 
+            [controlName]: {
+                ...this.state[categoryName][controlName],
+                touched: true,
+            }
+        }
+        this.setState({ [categoryName] : updatedControls });
+    }
     recoverAccountSubmitHandler = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         let error = '';
         let sendReq = true;
         for(let key in this.state.formControls) {
@@ -72,82 +88,133 @@ class RecoverAccountForm extends Component {
             }
         }
         if(sendReq)
-            this.requestRecoverAcc(this.state.formControls.email.value)
+            this.requestSearchAccount(this.state.formControls.email.value)
         else
             error = 'Fill in the email!';
         this.setState({submitMessage: error});
     }
-
-    requestRecoverAcc = (email) => {
-        axios.post('http://localhost:5000/recover/', {username: email})
-            .then(res => {
-                // if(res.data.found === 'true') {
-                //     const expirationDate = new Date(new Date().getTime() + res.data.expiresIn * 1000)
-                //     localStorage.setItem('token',  res.data.token)
-                //     localStorage.setItem('username', res.data.username)
-                //     localStorage.setItem('expirationDate', expirationDate)
-                //     dispatch(authSuccess(res.data.token, res.data.username));
-                //     dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime())/1000))
-                // } else {
-                //     console.log(res.data.error)
-                //     dispatch(authFail(res.data.error));
-                // }
+    arrayBufferToBase64(buffer, avatarType) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));        
+        bytes.forEach((b) => binary += String.fromCharCode(b));        
+        return 'data:' + avatarType + ';base64,' + window.btoa(binary);
+    };
+    requestSearchAccount = (email) => {
+        axios.post('http://localhost:5000/recover/', {searchEmail: true, email: email})
+        .then(res => {
+                console.log(email)
+                
+                // this.setState({userAvatar: res.data.userAvatar});
+                if(res.data.found === true) {
+                    this.setState({
+                        userAvatar: this.arrayBufferToBase64(res.data.userAvatar.data, res.avatarType),
+                        firstName: res.data.firstName,
+                        lastName: res.data.lastName,
+                        email: res.data.email
+                    });
+                } else {
+                    // console.log(res.data.error)
+                    this.setState({
+                        userAvatar: null,
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        submitMessage: res.data.message
+                    });
+                }
             })
             .catch(err => {
+                console.log(err)
                 // dispatch(authFail(err.response.data.error))
             })
     }
 
+    requestRecoverAccount = (event, email) => {
+        event.preventDefault();
+        if(email !== '')
+            axios.post('http://localhost:5000/recover/', {sendMail: true, email: email})
+                .then(res => {
+                    // console.log(res)
+                    // this.setState({userAvatar: res.data.userAvatar});
+                    if(res.data.error === false) {
+                        this.setState({
+                            userAvatar: null,
+                            firstName: '',
+                            lastName: '',
+                            email: '',
+                            submitMessage: res.data.message
+                        });
+                    } else {
+                        // console.log(res.data.error)
+                        this.setState({
+                            submitMessage: res.data.message
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                    // dispatch(authFail(err.response.data.error))
+                })
+    }
     render() {
         let form = null;
         let formElements = [];
-        
         for(let j in this.state.formControls) {
-            if(j === 'formConfig'){
+            if(j === 'formConfig') {
                 continue;
             }
             // console.log(this.state.formControls[j])
             formElements.push(<input
                 key={j}
-                className={styles.input + (!this.state.formControls[j].valid ? ' ' + styles.inputInvalid : '')} 
+                className={styles.input + (!this.state.formControls[j].valid && this.state.formControls[j].touched === true
+                                                ? ' ' + styles.inputInvalid : '')} 
                 type={this.state.formControls[j].elemConfig.type}
                 placeholder={this.state.formControls[j].elemConfig.placeholder}
                 onChange={(event) => this.inputChangedHandler(event, 'formControls', j)}
-                onFocus={(event) => this.props.focusFormHandler(event, 'RecoverAccountForm')}
+                onFocus={(event) => this.focusInputHandler(event, 'formControls', j)}
             />)
         }
-                
+
         form =
             <form 
-                onSubmit={this.state.formControls.formConfig.onSubmit}
+                // onSubmit={this.state.formControls.formConfig.onSubmit}
                 className={styles.rootForm + (this.props.focusForm !== 'RecoverAccountForm' ?  ' ' + styles.smallSizeForm : '') }
             >
+                <Typography variant='h5' style={{marginLeft: '32px'}}>Find Your Account</Typography>
                 <div className={styles.loginError}>
                     {this.state.submitMessage}
                 </div>
                 {formElements}
                 <SubmitButton
+                    onClick={(event) => this.recoverAccountSubmitHandler(event)}
                     type='submit'
                     variant="contained"
                 >
-                    Log In
-                </SubmitButton>  
+                    Search
+                </SubmitButton>
+
+                {this.state.userAvatar ? 
+                    <Fragment>
+                        <Typography style={{marginLeft: '32px'}}>Is this your account?</Typography>
+                        <ListElement name={this.state.firstName + ' ' + this.state.lastName} 
+                            description={this.state.email} avatar={this.state?.userAvatar}/>
+                        <SubmitButton
+                            onClick={(event) => this.requestRecoverAccount(event, this.state.email)}
+                            type='submit'
+                            variant="contained"
+                        >
+                            Recover
+                        </SubmitButton>
+                    </Fragment>
+                : ''}
             </form>
-        // console.log(forms)
-        return <>  {form} </>
+        // console.log(this.state?.userAvatar)
+        return <>
+                {form}
+            </>
     }
             
 }
 
-const mapStateToProps = state => {
-    return {
-        loginError: state.auth.error,
-    }
-}
-const mapDispatchtoProps = dispatch => {
-    return {
-        onAuth: (email, pass) => dispatch( actions.authRequest(email, pass)),
-    };
-}
 
-export default connect(mapStateToProps, mapDispatchtoProps)(RecoverAccountForm);
+export default RecoverAccountForm;

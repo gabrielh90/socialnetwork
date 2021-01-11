@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 
 
 global.__basedir = __dirname;
-global.baseUrl = "http://localhost:8080";
+global.baseUrl = "http://localhost:5000";
 
 // var corsOptions = {
 //   origin: "http://localhost:8080"

@@ -2,7 +2,11 @@ import * as actionTypes from './../actions/actionTypes'
 
 const initialState = {
     token: null,
-    username: null,
+    email: null,
+    userAvatar: null,
+    firstName: null,
+    lastName: null,
+    timeoutTimer: null,
     authRedirectPath: '/',
     error: null
 }
@@ -18,20 +22,34 @@ const authSuccess = (state, action) => {
     return {
         ...state,
         token: action.token,
-        username: action.username
+        email: action.email,
+        userAvatar: action.userAvatar,
+        firstName: action.firstName,
+        lastName: action.lastName,
+        timeoutTimer: action.timeoutTimer
     }
 }
 const authLogout = (state, action) => {
     return {
         ...state,
-        token: null,
-        username: null
+        ...initialState
     }
 }
 const authError = (state, action) => {
     return {
         ...state,
         error: action.error
+    }
+}
+const authTimeout = (state, action) => {
+    return {
+        ...state
+    }
+}
+const authUpdateTimeout = (state, action) => {
+    return {
+        ...state,
+        timeoutTimer: action.timeoutTimer
     }
 }
 const reducer = (state = initialState, action) => {
@@ -44,6 +62,10 @@ const reducer = (state = initialState, action) => {
             return authLogout(state, action);
         case actionTypes.AUTH_ERROR:
             return authError(state, action);
+        case actionTypes.AUTH_TIMEOUT:
+            return authTimeout(state, action);
+        case actionTypes.AUTH_UPDATE_TIMEOUT:
+            return authUpdateTimeout(state, action);
         default:
             return state;
     }

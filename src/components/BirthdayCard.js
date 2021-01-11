@@ -23,7 +23,7 @@ const BirthdayCard = ({title, names}) => {
     const twoElem = names.length === 2
     const afewElem = names.length >= 3
     if(oneElem) {
-        formatedNames = [<Typography variant='subtitle2' display='inline' style={{paddingRight: '6px'}}>{names[0]}</Typography>]
+        formatedNames = [<Typography key={1} variant='subtitle2' display='inline' style={{paddingRight: '6px'}}>{names[0]}</Typography>]
         avatar = AvatarSrc
     } else if(twoElem) {
         formatedNames = [
@@ -33,15 +33,15 @@ const BirthdayCard = ({title, names}) => {
         ]
     } else if(afewElem) {
         formatedNames = [
-            <Typography variant='subtitle2' display='inline' style={{paddingRight: '3px'}}>{names[0]}</Typography>,
-            <Typography variant='body2' display='inline' style={{paddingRight: '3px'}}>and</Typography>,
-            <Typography variant='subtitle2' display='inline' style={{paddingRight: '3px'}}>Others 
-            {names
+            <Typography key={0} variant='subtitle2' display='inline' style={{paddingRight: '3px'}}>{names[0]}</Typography>,
+            <Typography key={1} variant='body2' display='inline' style={{paddingRight: '3px'}}>and</Typography>,
+            <Typography key={2} variant='subtitle2' display='inline' style={{paddingRight: '3px'}}>Others 
+            {/* {names
             .map(
                 (elem, index) => {
-                    return index !== 0 && <Typography variant='subtitle2' display='inline' style={{display: 'none'}}>{elem}</Typography>
+                    return index !== 0 && <Typography key={index} variant='subtitle2' display='inline' style={{display: 'none'}}>{elem}</Typography>
                 }
-            )}
+            )} */}
             </Typography>,
             
         ]
@@ -54,7 +54,7 @@ const BirthdayCard = ({title, names}) => {
 
     const message = (names.length === 1 ? 'is' : 'are') + ' celebrating their birthday' //'s birthday is today
     formatedNames.push(
-        <Typography variant='body2'  display='inline' style={{paddingRight: '6px'}}> 
+        <Typography key={100} variant='body2'  display='inline' style={{paddingRight: '6px'}}> 
             {message}
         </Typography>
     )
@@ -73,8 +73,8 @@ return (
 }
 
 BirthdayCard.defaultProps = {
-    names: ['Patrocle', 'Pricolici', 'Piftel']
-    // names: ['Patrocle']
+    // names: ['Patrocle', 'Pricolici', 'Piftel']
+    names: ['Patrocle']
 }
 
 export default BirthdayCard

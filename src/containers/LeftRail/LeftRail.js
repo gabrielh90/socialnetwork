@@ -52,8 +52,8 @@ const LeftRail = () => {
             <Fragment>
                 <ListElement name={"Patrocle"} description='' avatar={AvatarSrc}/>
                 <List>
-                    {groups.map((group) => (
-                        <ListElement name={group.name} description={group.description} avatar={group.avatar}/>
+                    {groups.map((group, index) => (
+                        <ListElement key={index} name={group.name} description={group.description} avatar={group.avatar}/>
                     ))}
                 </List>
                 <ListElement name={"See more"} description='' avatar={AvatarSrc}/>

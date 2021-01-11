@@ -1,16 +1,15 @@
 import React, {Fragment} from 'react'
 import Story from '../../components/Story'
 import Post from '../Post/Post'
-
+import AddPost from '../AddPost'
 
 const CenterRail = () => {
 
     return (
             <Fragment>
-
-                <Story/>
+                <AddPost/>
                 <Post/>
-                {/* <Story/> */}
+                <Story/>
             </Fragment>
         );
 }

@@ -44,7 +44,7 @@ const ListElement = ({name, description, avatar, type}) => {
                 }
             </ListItemAvatar>
             <ListItemText 
-                disableTypography='true'
+                disableTypography
                 primary ={
                     typeof(name) === 'string' 
                         ?<Typography variant='subtitle1' style={{lineHeight: 1,}}>{name}</Typography>

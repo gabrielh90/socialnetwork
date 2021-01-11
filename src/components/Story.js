@@ -171,10 +171,10 @@ return (
             <Paper className={classes.paper} />
         ))} */}
 
-        {images.map((image) => (
+        {images.map((image, index) => (
             <ButtonBase
                 focusRipple
-                key={image.title}
+                key={index}
                 className={classes.image}
                 focusVisibleClassName={classes.focusVisible}
                 style={{

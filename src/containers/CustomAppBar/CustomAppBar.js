@@ -1,5 +1,7 @@
 import React, {Fragment} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
+import {connect} from 'react-redux';
+import {logout} from '../../store/actions';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,7 +32,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import AvatarSrc from "./../../assets/avatar.jpg"
-import ButtonBase from '@material-ui/core/ButtonBase'
+import ButtonBase from '@material-ui/core/ButtonBase';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -180,21 +182,11 @@ const StyledTabs = withStyles({
   },
 })(Tabs);
 
-export default function LogInAppBar() {
+function CustomAppBar(props) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -204,27 +196,10 @@ export default function LogInAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'buttom', horizontal: 'left' }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -247,20 +222,18 @@ export default function LogInAppBar() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={props.logOut}>
         <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
+          aria-label="Log out"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );
-
   return (
     <Fragment>
       <AppBar position="sticky" className={classes.appBar}>
@@ -350,55 +323,7 @@ export default function LogInAppBar() {
 
 
                   </StyledTabs>
-               
-                  {/* <ButtonBase aria-label="show 4 new mails" color="inherit"
-                    className={classes.desktopIcon}
-                  >
-                    <Badge badgeContent={0} color="secondary">
-                      <HomeRoundedIcon />
-                    </Badge>
-                  </ButtonBase>
-                  <ButtonBase aria-label="show 17 new notifications" color="inherit"
-                    className={classes.desktopIcon}
-                  >
-                    <Badge badgeContent={0} color="secondary">
-                      <OndemandVideoRoundedIcon />
-                    </Badge>
-                  </ButtonBase>
-                  <ButtonBase aria-label="show 4 new mails" color="inherit"
-                    className={classes.desktopIcon}
-                  >
-                    <Badge badgeContent={0} color="secondary">
-                      <StorefrontRoundedIcon />
-                    </Badge>
-                  </ButtonBase>
-                  <ButtonBase aria-label="show 17 new notifications" color="inherit"
-                    className={classes.desktopIcon}
-                  >
-                    <Badge badgeContent={17} color="secondary">
-                      <PeopleRoundedIcon />
-                    </Badge>
-                  </ButtonBase>
-                  <ButtonBase aria-label="show 4 new mails" color="inherit"
-                    className={classes.desktopIcon}
-                  >
-                    <Badge badgeContent={3} color="secondary">
-                      <GamepadRoundedIcon />
-                    </Badge>
-                  </ButtonBase>
-                  */}
                 </div> 
-                {/* <div className={classes.sectionMobile}>
-                  <IconButton
-                    aria-label="show more"
-                    aria-controls={mobileMenuId}
-                    aria-haspopup="true"
-                    onClick={handleMobileMenuOpen}
-                    color="inherit"
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                </div> */}
               </Grid>
               <Grid item xs={false} sm={4} md={4} lg={3}>
                 <div className={classes.rightIcons}>
@@ -412,9 +337,13 @@ export default function LogInAppBar() {
                   <Typography>First Name</Typography> */}
                   <ButtonBase>
                     <Chip
-                      avatar={<Avatar alt="Natacha" src={AvatarSrc} style={{    width: 32,
-                        height: 32,}} />}
-                      label="Patrocle"
+                      avatar={<Avatar alt="Natacha"
+                                      // src={AvatarSrc} 
+                                      // src={"http://localhost:5000/files/1609249888237-file"}
+                                      src={props.userAvatar}
+                                      style={{width: 32,
+                                              height: 32,}} />}
+                      label={props.firstName}
                       //className={classes.roundIcon}
                       style={{margin: '8px', background: 'transparent', '&hover': { background: 'gray'}}}
                     />
@@ -459,7 +388,21 @@ export default function LogInAppBar() {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
     </Fragment>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    firstName: state.auth.firstName,
+    userAvatar: state.auth.userAvatar,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logOut: () => dispatch(logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomAppBar); 

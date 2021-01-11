@@ -29,7 +29,7 @@ import axios from 'axios'
         onUploadProgress,
       });
     };
-    
+
     const getFilesService = () => {
       return axios.get("http://localhost:5000/files");
     };
@@ -113,6 +113,7 @@ import axios from 'axios'
                 fileInfos.map((file, index) => (
                   <li className="list-group-item" key={index}>
                     <a href={file.url}>{file.name}</a>
+                    <img style={{width: '100px'}} src={file.url} alt="bala" />
                   </li>
                 ))}
             </ul>

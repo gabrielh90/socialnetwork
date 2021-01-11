@@ -6,7 +6,6 @@ import Avatar from '@material-ui/core/Avatar';
 import {fade, makeStyles} from '@material-ui/core/styles'
 import Icon from '@material-ui/core/Icon'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -71,14 +70,14 @@ const ListElement = ({name, comment, avatar, type}) => {
     }
 
     const processComment = (comment) => {
-        let fComment = <div>{comment}</div>
+        let fComment = <>{comment}</>
         if (comment.length > 100) {
-            fComment = <div>
+            fComment = <>
                             {comment.slice(0, 70)}
                             {!readMore && <span style={{fontWeight: 500}} onClick={onChangeReadMore} > ...Read more </span> }
                             {readMore && comment.slice(70, comment.length) }
                             {readMore && <span style={{fontWeight: 500}} onClick={onChangeReadMore} > ...Read less </span> }
-                        </div>
+                        </>
         }
         return fComment
     }
@@ -143,7 +142,7 @@ const ListElement = ({name, comment, avatar, type}) => {
             
             <ListItemText 
                 style={{margin: '0px'}}
-                disableTypography='true'
+                disableTypography={true}
                 primary ={fName}
                 secondary={fComment
                     // typeof(name) === 'string' 
@@ -164,7 +163,5 @@ ListElement.defaultProps = {
     type: 'standard',
     avatar: null
 }
-ListElement.propTypes = {
-    comment: PropTypes.bool,
-}
+
 export default ListElement;

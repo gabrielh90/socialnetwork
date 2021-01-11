@@ -61,7 +61,6 @@ const AddComment = ({name, comment, avatar, type, setFocusInput}) => {
 
     let fName = <div style={{display: 'flex', alignItems: 'center'}}>
                     <div className={classes.itemTextPrimary}>
-                     
                       <input
                         placeholder="Write a comment..."
                         className={classes.rootInput}
@@ -88,7 +87,7 @@ const AddComment = ({name, comment, avatar, type, setFocusInput}) => {
             
             <ListItemText 
                 style={{margin: '0px'}}
-                disableTypography='true'
+                disableTypography={true}
                 primary ={fName}
                 secondary={ ''
                     // typeof(name) === 'string' 

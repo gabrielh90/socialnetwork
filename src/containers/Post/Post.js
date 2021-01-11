@@ -142,7 +142,6 @@ const useStyles = makeStyles((theme) => ({
       alignItems: 'center',
       justifyContent: 'left',
       color: theme.palette.common.white,
-
     },
     imageTitle: {
       position: 'relative',
@@ -166,7 +165,6 @@ const useStyles = makeStyles((theme) => ({
     albumOnePhoto:{
         display: 'grid',
         justifyContent: 'center',
-        
     },
     albumMultiplePhoto:{
         display: 'grid',
@@ -196,11 +194,11 @@ const imgGrid = () => {
                              maxHeight: '600px', overflow: 'hidden',}}>
                     {tileData.map((tile, index) => {
                                 if(index === 4 && tileData.length > 4) {
-                                    return <div >
+                                    return <div key={index}>
                                         <img src={tile.img} alt={tile.title}/>
                                     </div>
                                 } else {
-                                    return <div className={classes.albumMultiplePhoto}>
+                                    return <div key={index} className={classes.albumMultiplePhoto}>
                                         <img src={tile.img} alt={tile.title} style={{maxWidth: '100%'}}/>
                                     </div>
                                 }

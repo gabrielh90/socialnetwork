@@ -4,10 +4,21 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
     {
-        username: {
+        firstName: {
             type: String,
             required: true,
-            unique: true,
+            trim: true,
+            minlength: 3
+        },
+        lastName: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3
+        },
+        email: {
+            type: String,
+            required: true,
             trim: true,
             minlength: 3
         },
@@ -16,6 +27,21 @@ const userSchema = new Schema(
             required: true,
             trim: true,
             minlength: 3,
+        },
+        userAvatar: {
+            type: Buffer,
+        },
+        avatarName: {
+            type: String,
+        },
+        avatarType: {
+            type: String,
+        },
+        bornDate: {
+            type: Date,
+            required: false,
+            trim: true,
+            minlength: 3
         }
     },
     {
@@ -23,6 +49,6 @@ const userSchema = new Schema(
     }
 );
 
-const UserAccount = mongoose.model('UserAccount', userSchema)
+const UserAccount = mongoose.model('UserAccount', userSchema);
 
 module.exports = UserAccount;

@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-import styles from './LogInPage.css'
-import Button from '@material-ui/core/Button'
-import {withStyles} from '@material-ui/core/styles'
+import styles from './LogInPage.css';
+import Button from '@material-ui/core/Button';
+import {withStyles} from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
-import * as actions from '../../store/actions'
-import LogInForm from '../../components/LogInForm/LogInForm'
+import * as actions from '../../store/actions';
+import LogInForm from '../../components/LogInForm/LogInForm';
 import RecoverAccountForm from '../../components/RecoverAccountForm/RecoverAccountForm'
-import CreateNewAccount from '../../components/CreateNewAccount'
+import AddNewAccount from '../../components/AddNewAccount';
 
 const SingUpButton = withStyles((theme) => ({
     root: {
@@ -28,29 +28,28 @@ const SingUpButton = withStyles((theme) => ({
         marginTop: '12px',
         marginBottom: '12px',
     }
-}))(Button)
+}))(Button);
 
 class LogInPage extends Component {
     state = {
         focusForm: 'LogInForm',
-        createNewAccount: true
+        addNewAccount: false
     }
     focusParent = (event, formName) => {
         this.setState({focusForm: formName})
     }
-    cancelNewAccount = () => this.setState({createNewAccount: false})
+    cancelNewAccount = () => this.setState({addNewAccount: false})
     render() {
         let authRedirect = null;
         if(this.props.isAuthenticated) {
             authRedirect = <Redirect to={this.props.authRedirect} />
         }
         
-
         return <div className={styles.rootPage}>
             {authRedirect}
             <div className={styles.helper}>
                 <div className={styles.logo}>Facebook</div>
-                Facebook helps you connect and share with the people in your life.
+                Facebook - helps you connect and share with the people in your life.
             </div>
             <div className={styles.rootCard}>
                 <LogInForm focusForm={this.state.focusForm} focusFormHandler={this.focusParent}/>
@@ -60,16 +59,14 @@ class LogInPage extends Component {
                     variant="contained"
                     styles={{root: {color:'#F02849'}}}
                     fullWidth
-                    onClick={() => this.setState({createNewAccount: true})}
+                    onClick={() => this.setState({addNewAccount: true})}
                 >
                     Create New Account
                 </SingUpButton>
-                
-                
-                {this.state.createNewAccount 
+                {this.state.addNewAccount 
                     && 
-                    <div className={styles.modal} onClick={() => this.setState({createNewAccount: false})}>
-                        <CreateNewAccount cancelNewAccount={this.cancelNewAccount}/>
+                    <div className={styles.modal} onClick={() => this.setState({addNewAccount: false})}>
+                        <AddNewAccount cancelNewAccount={this.cancelNewAccount}/>
                     </div>
                 }
             </div>

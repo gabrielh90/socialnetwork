@@ -9,7 +9,7 @@ const userAuthsSchema = new mongoose.Schema(
             trim: true,
             minlength: 3
         },
-        username: {
+        email: {
             type: String,
             required: true,
             trim: true,

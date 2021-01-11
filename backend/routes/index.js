@@ -1,15 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("./userCreateaAcc");
-
+const userCreateAcc = require("./userCreateaAcc");
+const createPost = require("./createPost")
 
 let routes = (app) => {
-  const login = require('./user')
-  router.post("/newacc", controller.upload);
-  router.get("/files", controller.getListFiles);
-  router.get("/files/:name", controller.download);
+  const login = require('./userLogIn')
+  app.use('/login', login);
+  const recoverAcc = require('./userRecoverAcc');
+  app.use('/recover', recoverAcc);
+  router.post("/newacc", userCreateAcc.upload);
+
   
-  app.use('/login', login)
+  router.post("/newpost", createPost.newPost);
+
+  router.get("/files", userCreateAcc.getListFiles);
+  router.get("/files/:name", userCreateAcc.download);
+
   app.use(router);
 };
 

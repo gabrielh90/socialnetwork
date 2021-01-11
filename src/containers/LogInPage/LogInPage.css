@@ -1,3 +1,6 @@
+:root {
+    --form-width: 500px;
+}
 .rootPage {
     display: flex;
     align-content: center;
@@ -6,6 +9,7 @@
     height: 100vh;
     --form-size: 16px;
 }
+
 .smallSizeForm {
     --form-size: 4px;
 }
@@ -25,6 +29,7 @@
     font-size: 64px;
     text-transform: lowercase;
 }
+
 .rootCard {
     display: flex;
     background-color: white;
@@ -37,6 +42,25 @@
     padding: 16px;
     margin: auto;
 }
+@media only screen and (max-width: 1200px) {
+    .rootPage {
+        flex-direction: column;
+        padding-left: calc((100vw - var(--form-width)) / 2);
+        padding-right: calc((100vw - var(--form-width)) / 2);
+    }
+    .helper {
+        width: 100%;
+    }
+    .rootCard {
+        width: 100%;
+    }
+}
+/* @media only screen and (max-width: 600px) {
+    .rootPage {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+} */
 .rootForm {
     display: flex;
     flex-direction: column;

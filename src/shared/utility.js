@@ -18,5 +18,6 @@ export const checkValidity = (value, rules) => {
         const pattern = /^\d+$/;
         pattern.test( value ) || brokenRules.push('The field must be a number!');
     }
+    // brokenRules.forEach(val => console.log(val))
     return brokenRules.length === 0 ? true : false;
 }

@@ -72,6 +72,16 @@
 .inputSpanHalf {
     grid-column-end: span calc(var(--noOfColumns)/2);
 }
-.inputSpan3 {
+.inputSpanThree {
     grid-column-end: span calc(var(--noOfColumns)/3);
+}
+.inputSpan3Row {
+    grid-row-end: span 3;
+}
+
+.avatar{
+    width: auto;
+    max-height: 128px;
+    justify-self: center;
+    grid-column: 1 / span var(--noOfColumns);
 }

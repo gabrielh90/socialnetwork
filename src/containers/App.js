@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {Route, Switch, withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {Route, Switch, withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import AppLayout from './AppLayout/AppLayout'
 import LogInPage from './LogInPage/LogInPage'
 import * as actions from './../store/actions'
+import RecoverPassword from '../components/RecoverPassword/RecoverPassword';
 
 class App extends Component {
 
@@ -15,6 +16,7 @@ class App extends Component {
     render() {
         let routes = (
             <Switch>
+                <Route path='/recover/:id' component={RecoverPassword}></Route>
                 <Route path='/' component={LogInPage}></Route>
             </Switch>
         )

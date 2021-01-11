@@ -45,7 +45,8 @@ class LogInForm extends Component {
                         minLength: 6,
                         isEmail: true
                     },
-                    valid: false
+                    valid: false,
+                    touched: false,
                 },
                 password: {
                     elemType: 'input',
@@ -58,12 +59,14 @@ class LogInForm extends Component {
                         required: true,
                         minLength: 3,
                     },
-                    valid: false
+                    valid: false,
+                    touched: false
                 }
             },
         }
     
     inputChangedHandler  = ( event, categoryName, controlName ) => {
+        event.preventDefault();
         const updatedControls = {
                                     ...this.state[categoryName], 
                                     [controlName]: {
@@ -75,20 +78,34 @@ class LogInForm extends Component {
         this.setState({ [categoryName] : updatedControls })
         // console.log(this.state)
     }
+    focusInputHandler = (event, categoryName, controlName ) => {
+        event.preventDefault()
+        if(this.props.focusForm !== 'LogInForm'){
+            this.props.focusFormHandler(event, 'LogInForm');
+        }
+        const updatedControls = {
+            ...this.state[categoryName], 
+            [controlName]: {
+                ...this.state[categoryName][controlName], 
+                touched: true,
+            }
+        }
+        this.setState({ [categoryName] : updatedControls })
+    }
     loginSubmitHandler = (event) => {
         event.preventDefault();
         let error = '';
         let sendReq = true;
         for(let key in this.state.formControls) {
             if(key !== 'formConfig') {
-                 sendReq = sendReq && this.state.formControls[key].valid
+                sendReq = sendReq && this.state.formControls[key].valid
             }
         }
         if(sendReq)
-             this.props.onAuth(this.state.formControls.email.value, this.state.formControls.password.value)
-         else
+            this.props.onAuth(this.state.formControls.email.value, this.state.formControls.password.value)
+        else
             error = 'Fill in the required fields correctly!';
-         this.setState({submitMessage: error});
+        this.setState({submitMessage: error});
     }
 
     render() {
@@ -102,11 +119,13 @@ class LogInForm extends Component {
             // console.log(this.state.formControls[j])
             formElements.push(<input
                 key={j}
-                className={styles.input + ' ' + (!this.state.formControls[j].valid ? styles.inputInvalid : '')} 
+                className={styles.input + ' ' + 
+                            (!this.state.formControls[j].valid && this.state.formControls[j].touched === true
+                                    ? styles.inputInvalid : '')}
                 type={this.state.formControls[j].elemConfig.type}
                 placeholder={this.state.formControls[j].elemConfig.placeholder}
                 onChange={(event) => this.inputChangedHandler(event, 'formControls', j)}
-                onFocus={(event) => this.props.focusFormHandler(event, 'LogInForm')}
+                onFocus={(event) => this.focusInputHandler(event, 'formControls', j)}
             />)
         }
                 

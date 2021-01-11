@@ -25,7 +25,7 @@
 .loginError{
     color: var(--error);
     text-align: center;
-    margin: 0px 0px 12px 0px;
+    margin: 0px 0px 0px 0px;
 }
 .inputInvalid{
     border: 1px var(--error) solid;
