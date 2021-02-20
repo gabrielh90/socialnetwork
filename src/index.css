@@ -23,7 +23,3 @@
     --error: #F02849;   
     --root-font-family: "Roboto", "Helvetica", "Arial", sans-serif; 
 }
-
-html, body, #app, #app>div {
-    height: 100%
-  }

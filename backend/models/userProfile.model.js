@@ -3,47 +3,70 @@ const mongoose = require('mongoose');
 const userProfileSchema = new mongoose.Schema(
     {
         userId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
             required: true,
-            trim: true,
-            minlength: 3
         },
-        firstName: {
-            type: String,
-            required: true,
-            trim: true,
-            minlength: 3
-        },
-        lastName: {
-            type: String,
-            required: true,
-            trim: true,
-            minlength: 3
-        },
-        email: {
-            type: String,
-            required: true,
-            trim: true,
-            minlength: 3
-        },
-        password: {
-            type: String,
-            required: true,
-            trim: true,
-            minlength: 3,
-        },
-        userAvatar: {
+        coverPhoto: {
             type: Buffer,
         },
-        avatarType: {
+        shortDescription: {
+            type: String,
+            trim: true,
+        },
+        homeTown: {
+            type: String,
+            trim: true,
+        },
+        workplace: {
+            type: String,
+            trim: true,
+        },
+        school: {
+            type: String,
+            trim: true,
+        },
+        relationship: {
+            type: String,
+            trim: true,
+        },
+        friends: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
+        }],
+        friendRequestSent: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
+        }],
+        friendRequestReceived: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
+        }],
+        friendRequestAccepted: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
+        }],
+        privacy: {
             type: String,
         },
-        bornDate: {
-            type: Date,
-            required: false,
-            trim: true,
-            minlength: 3
-        }
+        privacyFriendsArray:  [{
+            type: mongoose.Types.ObjectId, 
+            ref: "UserAccount",
+        }],
+        posts: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "Posts",
+        }],
+        postsIdReplied: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "Posts",
+        }],
+        
+        groups: [{
+            type: mongoose.Types.ObjectId, 
+            ref: "Group",
+        }],
+        
     }
 )
 

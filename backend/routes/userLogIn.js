@@ -1,26 +1,8 @@
 const router = require('express').Router();
-const getRandomToken = require('./../utility/utilityFunctions');
+const {getRandomToken, arrayBufferToBase64} = require('./../utility/utilityFunctions');
 let UserAccount = require('../models/userAccount.model');
 let UserAuths = require('../models/userAuths.model');
-
-
-const checkUser = (req) => {
-    if(req.body.token === null) {
-        return UserAccount.findOne({
-            email: req.body.email,
-            password: req.body.password
-        })
-    } else {
-        return UserAuths.findOne({
-            email: req.body.email,
-            token: req.body.token
-        }).then(res => 
-            UserAccount.findOne({
-                _id: res.body.userId,
-            })
-        )
-    }
-}
+let UserProfile = require('../models/userProfile.model');
 
 router.route('/').post((req, res) => {
 
@@ -32,7 +14,6 @@ router.route('/').post((req, res) => {
     //     email: req.body.email,
     //     password: req.body.password
     // })
-        //checkUser(req)
 
     console.log(req.body);
     const expireIn = 11200;
@@ -59,7 +40,7 @@ router.route('/').post((req, res) => {
                     UserAuths.findOneAndUpdate(
                                     {_id: res._id},
                                     {logoutTime: logoutTime});
-                        console.log('auth token');
+                        // console.log('auth token');
                     return UserAccount.findOne({
                             _id: res.userId,
                         })
@@ -78,23 +59,23 @@ router.route('/').post((req, res) => {
             return response;
         })
     }
-        
-    auth.then(
+    try{
+        auth.then(
             user => {
                 if(user != null && response.authenticated === true) {
-                    console.log(user)
+                    // console.log(user)
                     // var fs = require('fs');
                     // fs.writeFileSync(__basedir + '/images/' + user.avatarName, user.userAvatar);
 
                     const token = passwordAuthentication === true ?  getRandomToken() : req.body.token ;
-
+                    const avatar = user['userAvatar'] !== undefined && user['userAvatar'] !== null ? arrayBufferToBase64(user['userAvatar'].buffer, user['avatarType']) : null
                     response = {
                         authenticated: true,
                         token: token,
                         logoutTime: logoutTime,
+                        userProfileId: user.userProfileId,
                         email: user.email,
-                        userAvatar: user.userAvatar,
-                        avatarType: user.avatarType,
+                        userAvatar: avatar,
                         firstName: user.firstName,
                         lastName: user.lastName,
                         // avatarUrl: __basedir + '/images/' + user.avatarName
@@ -133,6 +114,7 @@ router.route('/').post((req, res) => {
             }
         )
         .catch(err => {
+            console.log(err);
                 response = {
                     authenticated: false,
                     error: err
@@ -140,6 +122,13 @@ router.route('/').post((req, res) => {
                 res.status(400).json(response)
             }
         )
+    } catch (err) {
+        //     response = {
+        //         authenticated: false,
+        //         error: err
+        //     }    
+        //     res.status(400).json(response)
+    }
 })
 
 

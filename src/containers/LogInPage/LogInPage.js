@@ -9,7 +9,7 @@ import { green } from '@material-ui/core/colors';
 import * as actions from '../../store/actions';
 import LogInForm from '../../components/LogInForm/LogInForm';
 import RecoverAccountForm from '../../components/RecoverAccountForm/RecoverAccountForm'
-import AddNewAccount from '../../components/AddNewAccount';
+import CreateAccount from '../../components/CreateAccount';
 
 const SingUpButton = withStyles((theme) => ({
     root: {
@@ -42,7 +42,7 @@ class LogInPage extends Component {
     render() {
         let authRedirect = null;
         if(this.props.isAuthenticated) {
-            authRedirect = <Redirect to={this.props.authRedirect} />
+            authRedirect = <Redirect to={this.props.authRedirectPath} />
         }
         
         return <div className={styles.rootPage}>
@@ -66,7 +66,7 @@ class LogInPage extends Component {
                 {this.state.addNewAccount 
                     && 
                     <div className={styles.modal} onClick={() => this.setState({addNewAccount: false})}>
-                        <AddNewAccount cancelNewAccount={this.cancelNewAccount}/>
+                        <CreateAccount cancelNewAccount={this.cancelNewAccount}/>
                     </div>
                 }
             </div>
@@ -76,13 +76,13 @@ class LogInPage extends Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.token !== null,
-        authRedirect: state.auth.authRedirectPath
+        isAuthenticated: state.auth.userIsAuthenticated,
+        authRedirectPath: state.auth.authRedirectPath
     }
 }
 const mapDispatchtoProps = dispatch => {
     return {
-        onAuth: (email, pass) => dispatch( actions.authRequest(email, pass)),
+        // onAuth: (email, pass) => dispatch( actions.passwordAuthRequest(email, pass)),
     };
 }
 

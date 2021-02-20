@@ -19,7 +19,7 @@ const postSchema =  new Schema(
         belowText: String,
         imagesIds: [{
             type: mongoose.Types.ObjectId, 
-            ref: "ImagesPost",
+            ref: "ImagesPosts",
         }],
         commentsIds: [{
             type: mongoose.Types.ObjectId, 
@@ -41,7 +41,6 @@ const postSchema =  new Schema(
         privacyFriends: [{
             type: mongoose.Types.ObjectId, 
             ref: "UserAccount",
-            required: true,
         }],
         metadata: {
             reactionsNo: Number,
@@ -54,6 +53,6 @@ const postSchema =  new Schema(
 
 );
 
-const Post = mongoose.model('Post', postSchema);
+const Posts = mongoose.model('Posts', postSchema);
 
-module.exports = Post;
+module.exports = Posts;

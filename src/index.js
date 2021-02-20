@@ -4,7 +4,7 @@ import {applyMiddleware, compose, createStore} from 'redux'
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux'
 import App from './containers/App'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import styles from './index.css'
 import {BrowserRouter} from 'react-router-dom'
 import rootReducer from './store/reducers'
@@ -26,10 +26,24 @@ const theme = createMuiTheme({
     }
   }
 });
+// function logger({ getState }) {
+//   return next => action => {
+//     console.log('will dispatch', action)
 
+//     // Call the next dispatch method in the middleware chain.
+//     const returnValue = next(action)
+
+//     console.log('state after dispatch', getState())
+
+//     // This will likely be the action itself, unless
+//     // a middleware further in chain changed it.
+//     return returnValue
+//   }
+// }
 const composeEnhancers = (process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose;
 const store = createStore(rootReducer, composeEnhancers(
-  applyMiddleware(thunk)
+  applyMiddleware(thunk),
+  // applyMiddleware(logger),
 ));
 // const store = createStore(rootReducer);
 
@@ -43,6 +57,7 @@ ReactDOM.render(
       </ThemeProvider>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>,
+  </React.StrictMode>
+  ,
   document.getElementById('root')
 );

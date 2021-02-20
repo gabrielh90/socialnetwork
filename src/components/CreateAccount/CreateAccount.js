@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 
-import styles from './AddNewAccount.css'
+import styles from './CreateAccount.css'
 import Button from '@material-ui/core/Button'
 import {withStyles} from '@material-ui/core/styles'
 import { blue } from '@material-ui/core/colors';
 import Input from '../Input/Input'
-import {checkValidity} from '../../shared/utility'
+import {checkValidity} from '../../shared/formValidation'
 import axios from '../../shared/axios-base'
 
 const SubmitButton = withStyles((theme) => ({
@@ -24,7 +24,7 @@ const SubmitButton = withStyles((theme) => ({
     },
 }))(Button)
 
-class AddNewAccount extends Component {
+class CreateAccount extends Component {
     state = {
             submitMessage: '',
             formConfig: {
@@ -154,7 +154,6 @@ class AddNewAccount extends Component {
         this.setState({ [categoryName] : updatedControls })
     }
     inputFileChangedHandler = ( event, categoryName, controlName ) => {
-        
         const updatedControls = {
             ...this.state[categoryName], 
             [controlName]: {
@@ -177,6 +176,7 @@ class AddNewAccount extends Component {
             month: this.state.formControls['month'].value,
             day: this.state.formControls['day'].value,
         }
+        
         formData.append("file", file);
         for(let i in newUser) {
             formData.append(i, newUser[i])
@@ -195,7 +195,7 @@ class AddNewAccount extends Component {
         let sendReq = true;
         for(let key in this.state.formControls) {
             if(key !== 'formConfig') {
-                 sendReq = sendReq && this.state.formControls[key].valid
+                sendReq = sendReq && this.state.formControls[key].valid
             }
         }
         if(sendReq) {
@@ -395,4 +395,4 @@ class AddNewAccount extends Component {
     }
 }
 
-export default AddNewAccount;
+export default CreateAccount;

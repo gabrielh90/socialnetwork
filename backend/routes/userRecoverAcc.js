@@ -72,7 +72,6 @@ router.route('/').post((req, res) => {
                 }
             }
             res.json(response);
-            // res.json(response);
             // res.header("content-type", "application/json; charset=utf-8");
             // res.contentType('json');
             // res.send(response);
@@ -80,5 +79,46 @@ router.route('/').post((req, res) => {
     )
     .catch(err => res.status(400).json('Error: ' + err))
 });
+
+router.route('/:id').post((req, res) => {
+    // console.log(req.body);
+    UserRecoverAccount.findOneAndUpdate(
+        {token: req.body.id},
+        {valid: false}
+    )
+    .then(
+        userToken => {
+            let response = {
+                updated: false,
+                message: 'The token doesn\'t exist!'
+            }
+            if(!userToken) {
+                res.json(response);
+            } else if(userToken && userToken.valid) {
+                UserAccount.findOneAndUpdate(
+                    {_id: userToken.userId},
+                    {password: req.body.password})
+                .then(() => {
+                        response = {
+                            updated: true,
+                            message: 'The password was updated!'
+                        }
+                        res.json(response);
+                    })
+            } else if (userToken && !userToken.valid) {
+                response = {
+                    updated: false,
+                    message: 'The token was used. It is stale!'
+                }
+                res.json(response);
+            }
+            // 
+            // res.header("content-type", "application/json; charset=utf-8");
+            // res.contentType('json');
+            // res.send(response);
+        }
+    )
+    .catch(err => res.status(400).json('Error: ' + err))
+})
 
 module.exports = router;

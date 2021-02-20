@@ -1,0 +1,33 @@
+Friends Management
+***send/cancel friend request
+***receive/decline friend request
+***delete friend
+***friends list
+
+
+	Create, Delete, Update Posts
+	Users can send messages between them
+
+
+Create Account, Recover Password and LogIn page
+add start/end adornment when the input value is valid/invalid
+
+
+***memorize also a thumb picture from original
+***dynamic logout: send from time to time a wake up/still up action(eg: onclick) to update the logout timeout
+***add maxim login attempt, after that increment with timeStop=30min/60min/12hours/24hours...
+***hash user and pass and memorize as password before sending the login request into the network(MD5 email and pass)
+***custom recover password mail with the token and also a confirmation password changed e-mail
+
+
+****TESTING****
+
+
+
+DONE
+Create Account, Recover Password and LogIn page
+    *check server for login valid token and timeout
+
+
+Friends Management
+***find friends

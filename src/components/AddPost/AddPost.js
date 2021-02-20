@@ -151,7 +151,7 @@ const AddPost = () => {
         .catch((error)=> {
             console.log(error)
             if(isCancel(error)){
-                // alert("User canceled the request");
+                console.log(error.message);
             }
         })
     }

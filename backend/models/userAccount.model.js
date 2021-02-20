@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
     {
+        userProfileId: {
+            type: mongoose.Types.ObjectId, 
+            ref: "UserProfile",
+        },
         firstName: {
             type: String,
             required: true,

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import {connect} from 'react-redux';
-import {logout} from '../../store/actions';
+import {logout, fetchPage} from '../../store/actions';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,7 +10,6 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search'
 import Icon from '@material-ui/core/Icon'
 import SearchCard from '../../components/SearchCard'
 import MailIcon from '@material-ui/icons/Mail'
@@ -35,6 +34,7 @@ import AvatarSrc from "./../../assets/avatar.jpg"
 import ButtonBase from '@material-ui/core/ButtonBase';
 
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   leftIcons: {
     display: 'flex',
+    alignItems: 'center',
   },
   facebookIcon: {
     margin: '0 0px',
@@ -51,67 +52,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 50,
     backgroundColor: 'transparent',
     display: 'inline-flex',
-  },
-  searchIcon: {
-    color: 'gray',
-    display: 'flex',
-    [theme.breakpoints.up('lg')]: {
-      display: 'none',
-    },
-  },
-  search: {
-    margin: 'auto',
-    marginLeft: theme.spacing(0.5),
-    marginRight: theme.spacing(0.5),
-    //border: '2px red dotted',
-    position: 'relative',
-    borderRadius:50,
-    backgroundColor: fade(theme.palette.common.black, 0.04),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.black, 0.07),
-    },
-    maxHeight: 48,
-    width: '100%',
-
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-      display: 'flex',
-    },
-  },
-  searchIconInput: {
-    //border: '2px green solid',
-    padding: theme.spacing(0, 1.5),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'gray',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    // border: '2px blue solid',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1.2, 1.5, 1.2, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(3)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      //width: '20ch',
-    },
-  },
-  searchCard:{
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    display: 'none',
   },
   sectionDesktop: {
     //justifyContent: 'space-between',
@@ -132,20 +72,40 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
-     // display: 'none',
-    },
   },
   rightIcons:{
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+
+  chipRoot: {
+    alignSelf: 'center',
+    marginRight: '4px',
+    fontSize: '.9375rem',
+    height: 'auto',
+    borderRadius: 100,
+    background: 'transparent',
+    '&:hover, &:focus': {
+      backgroundColor: fade(theme.palette.common.black, 0.07),
+    },
+    '& $chipAvatar': {
+      marginLeft: '4px',
+      marginTop: 4,
+      marginBottom: 4,
+      width: 28,
+      height: 28,
+    },
+  },
+  chipAvatar: {},
+  blueColor: {
+    color: 'hsl(214, 89%, 52%)',
+    background: '#E7F3FF',
   },
   roundIcon: {
     //border: '2px green solid',
     margin: theme.spacing(0.5),
     padding: theme.spacing(1),
     fontSize: 24,
-    height: '100%',
     // color: 'gray',
     background: fade(theme.palette.common.black, 0.04),
     '&:hover': {
@@ -187,7 +147,7 @@ function CustomAppBar(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  // console.log(props.history.location.pathname);
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -195,6 +155,11 @@ function CustomAppBar(props) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const profilePageHandler = (event) => {
+    props.fetchPage('/' + props.userProfileId);
+    props.history.push('/' + props.userProfileId);
+  }
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -242,48 +207,25 @@ function CustomAppBar(props) {
                     justifyContent: 'space-between',
                     flexGrow: 1,}} disableGutters >
             <Grid container spacing={3} style={{justifyContent:'space-between'}}>
-              <Grid item xs={false} sm={4} md={4} lg={3}>
-                <div className={classes.leftIcons}>
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                  style={{backgroundColor: 'transparent',
-                          padding: 0, margin: 0}}
-                >
-                  <Icon className={classes.facebookIcon}>facebook</Icon>
-                </IconButton>
-
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                  // style={{backgroundColor: 'transparent',
-                  //         padding: 0, margin: 0}}
-                  className={classes.roundIcon + ' ' + classes.searchIcon}
-                >
-                  <SearchIcon/>
-                </IconButton>
-
-                <div className={classes.search}>
-                  <div className={classes.searchIconInput}>
-                    <SearchIcon />
-                  </div>
-                  <InputBase
-                    placeholder="Search…"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                  />
-                </div>
-                <div className={classes.searchCard}>
-                        <SearchCard/>
-                </div>
-              </div>
+              <Grid item xs={2} sm={2} md={4} lg={3} className={classes.leftIcons}>
+                <Link to='/'>
+                  <IconButton
+                    edge={false}
+                    disableFocusRipple={false}
+                    color="primary"
+                    aria-label="open drawer"
+                    size='small'
+                    style={{
+                            backgroundColor: 'transparent',
+                            padding: 0, 
+                            }}
+                  >
+                    <Icon className={classes.facebookIcon}>facebook</Icon>
+                  </IconButton>
+                </Link>
+                <SearchCard/>
               </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4}>
+              <Grid item xs={5} sm={5} md={4} lg={4}>
                 <div className={classes.sectionDesktop}>
                   <StyledTabs
                     value={3}
@@ -320,34 +262,26 @@ function CustomAppBar(props) {
                         <GamepadRoundedIcon />
                       </Badge>
                     } aria-label="games round icon" />
-
-
                   </StyledTabs>
                 </div> 
               </Grid>
-              <Grid item xs={false} sm={4} md={4} lg={3}>
-                <div className={classes.rightIcons}>
-                  {/* <IconButton
-                    aria-label="account of current user"
-                    color="inherit"
-                    style={{backgroundColor: 'transparent',}}
-                  >
-                    <AccountCircle/>
-                  </IconButton>
-                  <Typography>First Name</Typography> */}
-                  <ButtonBase>
-                    <Chip
-                      avatar={<Avatar alt="Natacha"
-                                      // src={AvatarSrc} 
-                                      // src={"http://localhost:5000/files/1609249888237-file"}
-                                      src={props.userAvatar}
-                                      style={{width: 32,
-                                              height: 32,}} />}
-                      label={props.firstName}
-                      //className={classes.roundIcon}
-                      style={{margin: '8px', background: 'transparent', '&hover': { background: 'gray'}}}
-                    />
-                  </ButtonBase>
+              <Grid item xs={5} sm={5} md={4} lg={3} className={classes.rightIcons}>
+                  <Chip
+                    avatar={<Avatar alt={props.firstName}
+                                    src={props.userAvatar}
+                                    // style={{width: 28,
+                                    //         height: 28,}}
+                            />}
+                    label={props.firstName}
+                    onClick={profilePageHandler}
+                    classes={{
+                              root: classes.chipRoot,
+                              avatar: classes.chipAvatar,
+                    }}
+                    className={props.history.location.pathname === ('/' + props.userProfileId) ? classes.blueColor : ''}
+                    style={{// background: 'transparent', '&:hover': { background: 'gray'}
+                    }}
+                  />
                   <IconButton 
                     aria-label="show 4 new mails" color="inherit"
                     className={classes.roundIcon}
@@ -382,7 +316,6 @@ function CustomAppBar(props) {
                   >
                     <ArrowDropDownIcon/>
                   </IconButton>
-                </div>
               </Grid>
             </Grid>
         </Toolbar>
@@ -394,14 +327,17 @@ function CustomAppBar(props) {
 
 const mapStateToProps = state => {
   return {
+    userProfileId: state.auth.userProfileId,
     firstName: state.auth.firstName,
+    lastName: state.auth.lastName,
     userAvatar: state.auth.userAvatar,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    logOut: () => dispatch(logout())
+    logOut: () => dispatch(logout()),
+    fetchPage: (url) => dispatch(fetchPage(url))
   }
 }
 

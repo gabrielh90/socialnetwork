@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button'
 import {withStyles} from '@material-ui/core/styles'
 import { blue } from '@material-ui/core/colors';
 import * as actions from '../../store/actions'
-import {checkValidity} from '../../shared/utility'
+import {checkValidity} from '../../shared/formValidation'
+import { withRouter } from 'react-router-dom'
 
 const SubmitButton = withStyles((theme) => ({
     root: {
@@ -102,7 +103,10 @@ class LogInForm extends Component {
             }
         }
         if(sendReq)
-            this.props.onAuth(this.state.formControls.email.value, this.state.formControls.password.value)
+            this.props.onAuth(this.state.formControls.email.value, 
+                              this.state.formControls.password.value,
+                              this.props.history.location.pathname
+                              )
         else
             error = 'Fill in the required fields correctly!';
         this.setState({submitMessage: error});
@@ -161,8 +165,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchtoProps = dispatch => {
     return {
-        onAuth: (email, pass) => dispatch( actions.authRequest(email, pass)),
+        onAuth: (email, pass, url) => dispatch( actions.passwordAuthRequest(email, pass, url)),
     };
 }
 
-export default connect(mapStateToProps, mapDispatchtoProps)(LogInForm);
+export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(LogInForm));

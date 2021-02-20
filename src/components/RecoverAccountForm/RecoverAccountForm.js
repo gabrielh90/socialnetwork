@@ -4,7 +4,7 @@ import styles from './RecoverAccountForm.css'
 import Button from '@material-ui/core/Button'
 import {withStyles} from '@material-ui/core/styles'
 import { blue } from '@material-ui/core/colors';
-import {checkValidity} from '../../shared/utility';
+import {checkValidity} from '../../shared/formValidation';
 import axios from 'axios';
 import ListElement from '../ListElement';
 import { Typography } from '@material-ui/core';

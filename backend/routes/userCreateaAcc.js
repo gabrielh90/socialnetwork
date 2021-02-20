@@ -1,19 +1,21 @@
 const {uploadImage} = require("../middleware/upload");
-const userAccount = require('../models/userAccount.model');
+const UserAccount = require('../models/userAccount.model');
+let UserProfile = require('../models/userProfile.model');
 
-const upload = async (req, res) => {
+const create = async (req, res) => {
+  console.log(req.body)
   try {
+    if (req.file === undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
     await uploadImage(req, res)
     .catch((error) => {
         console.log(error);
     });
-    if (req.file === undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
     console.log(req.file);
     var fs = require('fs');
     var imageData = fs.readFileSync(req.file.path);
-    const newUser = new userAccount({
+    const newUser = new UserAccount({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -26,10 +28,21 @@ const upload = async (req, res) => {
     // fs.writeFileSync(__basedir + '/images/tmp-me.png', imageData);
     
     newUser.save()
-          .then(img => {
-            console.log("Account saved into DB" + img);
+          .then(user => {
+            console.log("User account created: " + user);
+            
+            UserProfile.create({userId: user._id})
+            .then(profile => {
+              console.log("User Profile Document created" + profile);
+              UserAccount.findOneAndUpdate(
+                {_id: user._id},
+                {userProfileId: profile._id})
+                .then(userAccProfile => 
+                  console.log(userAccProfile)
+                )
+            })
             // Find the stored image in MongoDB, then save it in '/static/assets/tmp' folder
-            // userAccount.findById(img, (err, findOutImage) => {
+            // UserAccount.findById(user, (err, findOutImage) => {
             //   if (err) throw err;
             //   try{
             //     fs.writeFileSync(__basedir + '/images/tmp-jsa-header.png', findOutImage.userAvatar);
@@ -86,7 +99,7 @@ const download = (req, res) => {
 };
 
 module.exports = {
-  upload,
+  create,
   getListFiles,
   download,
 };

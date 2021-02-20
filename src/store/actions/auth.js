@@ -15,18 +15,18 @@ export const authFail = ( error ) => {
         error: error
     }
 }
-export const authSuccess = (token, email, firstName, lastName, userAvatar, timeoutTimer) => {
+export const authSuccess = (timeoutTimer, res) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        token: token,
-        email: email, 
-        userAvatar: userAvatar,
-        firstName: firstName,
-        lastName: lastName,
+        token: res.token,
+        userProfileId: res.userProfileId,
+        email: res.email, 
+        userAvatar: res.userAvatar,
+        firstName: res.firstName,
+        lastName: res.lastName,
         timeoutTimer: timeoutTimer,
     }
 }
-
 export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
@@ -38,7 +38,6 @@ export const logout = () => {
         dispatch({type: actionTypes.AUTH_LOGOUT})
     }
 }
-
 export const authTimeout = (timerTimeout) => {
     return {
         type: actionTypes.AUTH_UPDATE_TIMEOUT,
@@ -66,17 +65,18 @@ export const updateAuthTimeout = (logoutTime) => {
         // )
     }
 };
-
-function arrayBufferToBase64(buffer, avatarType) {
+function arrayBufferToBase64(buffer, avatarType = '') {
     var binary = '';
     var bytes = [].slice.call(new Uint8Array(buffer));        
     bytes.forEach((b) => binary += String.fromCharCode(b));        
     return 'data:' + avatarType + ';base64,' + window.btoa(binary);
 };
-export const authCheckState = () => {
+
+export const tokenAuthRequest = (url='/') => {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
     return  (dispatch, getState) => {
-        const token = localStorage.getItem('token');
-        const email = localStorage.getItem('email');
+        dispatch(authStart());
         if(!token && !email) {
             dispatch(logout())
         } else {
@@ -84,19 +84,18 @@ export const authCheckState = () => {
             if(expirationDate < new Date()) {
                 dispatch(logout());
             } else {
-                const userCredentials = {
+                const userCredentials = { 
                     email: email,
-                    token: token
+                    token: token,
                 }
-                axios.post('http://localhost:5000/login/', userCredentials)
+                axios.post('http://localhost:5000/login', userCredentials)
                 .then(res => {
                         // console.log(res);
                         if(res.data.authenticated === true) {
                                 // console.log(res.data);
                                 localStorage.setItem('expirationDate', res.data.logoutTime);
                                 const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
-                                const imageStr = arrayBufferToBase64(res.data.userAvatar.data, res.data.avatarType);
-                                dispatch(authSuccess(res.data.token, res.data.email, res.data.firstName, res.data.lastName, imageStr, timeoutTimer));
+                                dispatch(authSuccess(timeoutTimer, res.data));
                         } else {
                             console.log(res);
                             dispatch(authFail(res.data.error));
@@ -111,16 +110,61 @@ export const authCheckState = () => {
         }
     }
 }
+export const tokenAuthRequestFetchPage = (url='/') => {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    return  (dispatch, getState) => {
+        dispatch(authStart());
+        let userCredentials = {
+            email: email,
+            token: token,
+            url: url
+        }
+        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+        if(expirationDate < new Date()) {
+            dispatch(logout());
+            userCredentials = {
+                ...userCredentials,
+                email: '',
+                token: ''
+            }
+        }
 
-export const authRequest = (email, password) => {
+        if((token !== '' && email !== '') || url !== '/') {
+            axios.post('http://localhost:5000/login', userCredentials)
+            .then(res => {
+                    // console.log(res);
+                    if(res.data.authenticated === true) {
+                        // console.log(res.data);
+                        localStorage.setItem('expirationDate', res.data.logoutTime);
+                        const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
+                        dispatch(authSuccess(timeoutTimer, res.data));
+                    } else if(res.data.authenticated !== true && userCredentials.email !== ''){
+                        console.log(res);
+                        dispatch(authFail(res.data.error));
+                    }
+                    //dispatch also data
+                }
+            )
+            .catch(err => {
+                console.log(err);
+                dispatch(authFail(err.response.data.error));
+            })
+        }
+    }
+}
+
+export const passwordAuthRequest = (email, password, url='/') => {
     return dispatch => {
         dispatch(authStart());
         const userCredentials = {
             email: email,
-            password: password
+            password: password,
+            url: url
         }
         // console.log(userCredentials);
-        axios.post('http://localhost:5000/login/', userCredentials)
+        // console.log('http://localhost:5000/' + url);
+        axios.post('http://localhost:5000/login', userCredentials)
             .then(res => {
                 //console.log(res.data);
                 if(res.data.authenticated === true) {
@@ -129,12 +173,12 @@ export const authRequest = (email, password) => {
                     localStorage.setItem('email', res.data.email);
                     localStorage.setItem('expirationDate', res.data.logoutTime);
                     const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
-                    const imageStr = arrayBufferToBase64(res.data.userAvatar.data, res.data.avatarType);
-                    dispatch(authSuccess(res.data.token, res.data.email, res.data.firstName, res.data.lastName, imageStr, timeoutTimer));
+                    dispatch(authSuccess(timeoutTimer, res.data));
                 } else {
                     console.log(res.data.error);
                     dispatch(authFail(res.data.error));
                 }
+                //return data
             })
             .catch(err => {
                 console.log(err);

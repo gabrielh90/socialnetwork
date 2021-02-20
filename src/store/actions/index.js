@@ -1,5 +1,10 @@
 export {
     logout,
-    authCheckState,
-    authRequest
+    tokenAuthRequest,
+    tokenAuthRequestFetchPage,
+    passwordAuthRequest
 } from './auth'
+export  {
+    fetchPage,
+    updateFields
+} from './currentPage'

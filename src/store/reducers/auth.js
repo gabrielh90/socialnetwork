@@ -1,8 +1,11 @@
 import * as actionTypes from './../actions/actionTypes'
 
 const initialState = {
-    token: null,
-    email: null,
+    userIsNotAuthenticated: false,
+    userIsAuthenticated: false,
+    token: localStorage.getItem('token') || '',
+    userProfileId: null,
+    email: localStorage.getItem('email') || '',
     userAvatar: null,
     firstName: null,
     lastName: null,
@@ -13,32 +16,35 @@ const initialState = {
 
 const authStart = (state, action) => {
     return {
-        ...state,
-        error: null,
-        token: null
+        ...state
     }
 }
 const authSuccess = (state, action) => {
     return {
         ...state,
         token: action.token,
+        userProfileId: action.userProfileId,
         email: action.email,
         userAvatar: action.userAvatar,
         firstName: action.firstName,
         lastName: action.lastName,
-        timeoutTimer: action.timeoutTimer
+        timeoutTimer: action.timeoutTimer,
+        userIsNotAuthenticated: false,
+        userIsAuthenticated: true,
     }
 }
 const authLogout = (state, action) => {
     return {
-        ...state,
-        ...initialState
+        ...initialState,
+        userIsNotAuthenticated: true,
     }
 }
 const authError = (state, action) => {
     return {
         ...state,
-        error: action.error
+        error: action.error,
+        userIsNotAuthenticated: true,
+        userIsAuthenticated: false,
     }
 }
 const authTimeout = (state, action) => {
