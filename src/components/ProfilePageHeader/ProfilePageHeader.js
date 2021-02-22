@@ -159,29 +159,11 @@ function ProfilePage(props) {
     }, [])
 
     const inputFileChangeHandler = (event) => {
-
-        // console.log(formData)
-      
-
         let formData = new FormData();
-        formData.append('sdasd', 'asdas');
         formData.append('file', event.target.files[0]);
         formData.append(anchorEl.id, true);
-        // console.log(event.target.files)
-        console.log(formData.getAll(anchorEl.id));
-        console.log(formData.getAll('file'));
-        // return axios.post(props.history.location.pathname + "/update",
-        // formData, {
-        //     headers: {
-        //     "Content-Type": "multipart/form-data",
-        //     }
-        // });
 
-        // props.updateFields(props.history.location.pathname, formData);
-        // props.updateFields(props.history.location.pathname, 
-        //                     {[anchorEl.id]: true,
-        //                      'file': event.target.files[0]
-        //                     })
+        props.updateFields(props.history.location.pathname, formData);
         setAnchorEl(null);
     }
     const handleClick = (event) => {
@@ -220,7 +202,7 @@ function ProfilePage(props) {
 
     return (
         <div className={styles.hero}>
-            <div className={styles.cover}>
+            <div className={styles.cover} style={{backgroundImage: `url(${props.pageContent?.coverPhoto})`}}>
                 <StyledBadge
                     onClick={handleClick}
                     id='userAvatar'

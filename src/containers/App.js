@@ -18,7 +18,11 @@ function App(props) {
             const requestInterceptor = axios.interceptors.request.use( req => {
                 if (props.token !== '') {
                     req.headers['Authorization'] = 'Bearer ' + props.token;
-                    req.data = { ...req.data, token: props.token}
+                    // if (req.data.constructor.name === 'FormData') {
+                    //     req.data.append('token', props.token);
+                    // } else {
+                    //     req.data = { ...req.data, token: props.token}
+                    // }
                 }
                 console.log(req);
                 return req;

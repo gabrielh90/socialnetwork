@@ -13,7 +13,7 @@ const postSchema =  new Schema(
             type: String,
             required: true,
             trim: true,
-            minlength: 3
+            minlength: 3,
         },
         aboveText: String,
         belowText: String,
@@ -44,7 +44,7 @@ const postSchema =  new Schema(
         }],
         metadata: {
             reactionsNo: Number,
-            commentsNo: Number
+            commentsNo: Number,
         }
     },
     {

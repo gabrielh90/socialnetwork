@@ -24,17 +24,30 @@ async function checkToken (req) {
         error: 'Something went wrong: ' + arguments.callee.name,
         userId: null
     }
-    if(req.body['token'] === '') return new Promise (resolve => {
+    const bearerHeader = req.headers['authorization'];
+    let bearerToken = '';
+    if(bearerHeader) {
+        const bearer = bearerHeader.split(' ');
+        bearerToken = bearer[1];
+    }
+    if(bearerToken === '') return new Promise (resolve => {
         response = {
             ...response,
             error: 'Provide a token: ' + arguments.callee.name,
         }     
         resolve(response)
     });
+    // if(req.body['token'] === '') return new Promise (resolve => {
+    //     response = {
+    //         ...response,
+    //         error: 'Provide a token: ' + arguments.callee.name,
+    //     }     
+    //     resolve(response)
+    // });
     
     await UserAuths.findOne({
         // email: req.body.email,
-        token: req.body.token
+        token: bearerToken
     })
     .sort({created_at: -1})
     .then(res => {

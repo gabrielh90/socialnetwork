@@ -25,7 +25,7 @@ const getProfile = async (req, res) => {
             .populate('userId')
             .then(user => {
                 // console.log(user);
-                const userAvatar = user['userAvatar'] !== undefined && user['userAvatar'] !== null ? arrayBufferToBase64(user['userAvatar'].buffer, user['avatarType']) : null
+                const userAvatar = user.userId['userAvatar'] !== undefined && user.userId['userAvatar'] !== null ? arrayBufferToBase64(user.userId['userAvatar'].buffer, user.userId['avatarType']) : null
                 const coverPhoto = user['coverPhoto'] !== undefined && user['coverPhoto'] !== null ? arrayBufferToBase64(user['coverPhoto'].buffer) : null
                 arrayRsp = {
                     userProfileId: user.userId['userProfileId'],
@@ -100,23 +100,32 @@ const getProfile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        res.status(404).json({
+            error: 'Page is not available',
+        })
+        return;
+    }
+    await uploadImage(req, res)
+                .catch((error) => {
+                    console.log(error);
+            });
     // console.log(arguments.callee.name);
     console.log(req.params);
     console.log(req.body);
+    console.log(req.file);
 
     const userAccFields = ["firstName", "lastName", "email", "password", "userAvatar"];
 
     const isUserAuthenticated = await checkToken(req);
     console.log(isUserAuthenticated)
-    if(isUserAuthenticated.authenticated === true &&
-        mongoose.Types.ObjectId.isValid(req.params.id)) {
-        console.log(req.file);
+    if(isUserAuthenticated.authenticated === true) {
         let image;
+        // await uploadImage(req, res)
+        //     .catch((error) => {
+        //         console.log(error);
+        // });
         if(req.file !== undefined) {
-            await uploadImage(req, res)
-            .catch((error) => {
-                console.log(error);
-            });
             const fs = require('fs')
             image = fs.readFileSync(req.file.path);
         }
@@ -142,13 +151,15 @@ const updateProfile = async (req, res) => {
                     }
                 }
             })
+            console.log(userAccountData)
+            console.log(userProfileData)
             if(Object.keys(userAccountData).length > 0) {
                 UserAccount.findOneAndUpdate(
                 {_id: isUserAuthenticated.userId,
                 userProfileId: user.userProfileId},
                 userAccountData)
                 .then(userAccountBeforeUpdat => {
-                // console.log(userAccountBeforeUpdat)
+                console.log(userAccountBeforeUpdat)
                 })
             }
             if(Object.keys(userProfileData).length > 0) {
@@ -156,7 +167,7 @@ const updateProfile = async (req, res) => {
                 {_id: user.userProfileId},
                 userProfileData)
                 .then(userProfileBeforeUpdate => {
-                // console.log(userProfileBeforeUpdate)
+                console.log(userProfileBeforeUpdate)
                 })
             }
             res.json({

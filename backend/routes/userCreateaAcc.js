@@ -3,15 +3,14 @@ const UserAccount = require('../models/userAccount.model');
 let UserProfile = require('../models/userProfile.model');
 
 const create = async (req, res) => {
-  console.log(req.body)
   try {
-    if (req.file === undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
     await uploadImage(req, res)
     .catch((error) => {
         console.log(error);
     });
+    if (req.file === undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
     console.log(req.file);
     var fs = require('fs');
     var imageData = fs.readFileSync(req.file.path);
