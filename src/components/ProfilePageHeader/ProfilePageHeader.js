@@ -15,6 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import axios from './../../shared/axios-base';
+import { useState } from 'react';
 
 const StyledBadge = withStyles((theme) => ({
     root: {
@@ -142,7 +143,8 @@ const StyledTabs = withStyles({
 
 function ProfilePage(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-
+    const [updateBio, setUpdateBio] = useState(false)
+    const [newBio, setNewBio] = useState(props.pageContent.shortDescription)
     // const profilePageHandler = (event, userId) => {
     //     props.fetchPage('/' + userId);
     //     props.history.push('/' + userId);
@@ -160,10 +162,12 @@ function ProfilePage(props) {
 
     const inputFileChangeHandler = (event) => {
         let formData = new FormData();
-        formData.append('file', event.target.files[0]);
-        formData.append(anchorEl.id, true);
+        formData.append('file', event.target.files[0], anchorEl.id);
+        // formData.append('file', event.target.files[0]);
+        // formData.append(anchorEl.id, true);
 
-        props.updateFields(props.history.location.pathname, formData);
+        let newReactData = Object.assign({},{[anchorEl.id] : URL.createObjectURL(event.target.files[0])});
+        props.updateFields(props.history.location.pathname, formData, newReactData);
         setAnchorEl(null);
     }
     const handleClick = (event) => {
@@ -199,7 +203,8 @@ function ProfilePage(props) {
         </label>
         </StyledMenuItem>
     </StyledMenu>
-
+    console.log(newBio)
+    console.log(props.pageContent.shortDescription)
     return (
         <div className={styles.hero}>
             <div className={styles.cover} style={{backgroundImage: `url(${props.pageContent?.coverPhoto})`}}>
@@ -230,7 +235,9 @@ function ProfilePage(props) {
             <Typography variant="h4" align="center">
                 {props.pageContent['firstName'] + ' ' + props.pageContent['lastName']}
             </Typography>
-            <div className={styles.addBio}>
+            <div className={styles.shortDescription}>
+                {!updateBio && 
+                <>
                 <Typography variant="subtitle1" display="block" align="center">
                     {props.pageContent.shortDescription}
                 </Typography>
@@ -240,7 +247,10 @@ function ProfilePage(props) {
                     disableRipple={true}
                     disableFocusRipple={true}
                     disableElevation={true}
-                    style={{margin: 'auto'}}
+                    onClick={() => {
+                        setNewBio(props.pageContent.shortDescription);
+                        setUpdateBio(true);
+                    }}
                 >
                     {Boolean(props.pageContent.shortDescription) ? 
                         "EditBio"
@@ -248,20 +258,31 @@ function ProfilePage(props) {
                         "AddBio"
                     }
                 </AddBioButton>
+                </>}
 
-                <TextField
-                    style={{margin: 'auto'}}
-                    id="outlined-multiline-static"
-                    label="Describe who you are"
-                    multiline
-                    rows={4}
-                    // defaultValue="Default Value"
-                    variant="outlined"
-                />
-                <ButtonGroup style={{justifyContent:"end"}}>
-                <Button variant="contained" color="primary">Cancel</Button>
-                <Button variant="contained" disabled >Save</Button> 
-                </ButtonGroup>
+                {updateBio  && <div className={styles.bioUpdate}>
+                    <TextField
+                        style={{marginBottom: '8px'}}
+                        id="outlined-multiline-static"
+                        label="Describe who you are"
+                        placeholder="Describe who you are"
+                        InputLabelProps={{shrink: true}}
+                        margin='normal'
+                        multiline
+                        rows={4}
+                        defaultValue={Boolean(props.pageContent.shortDescription) ? props.pageContent.shortDescription : ""}
+                        variant="outlined"
+                        onChange={(event) => {setNewBio(event.target.value)}}
+                    />
+                    <div style={{alignSelf:"end"}}>
+                        <Button variant="contained" color="primary" style={{marginRight: '8px'}}
+                        onClick={() => setUpdateBio(false)}
+                        >Cancel</Button>
+                        <Button variant="contained" disabled={newBio === props.pageContent.shortDescription} 
+                            onClick={()=>{props.updateFields(props.history.location.pathname, {shortDescription :newBio});}}
+                        >Save</Button> 
+                    </div>
+                </div>}
             </div>
             <Divider variant="middle" style={{marginTop: '18px', marginBottom: '18px'}} />
             <div className={styles.navigation}>
@@ -301,7 +322,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchPage: (url) => dispatch(actions.fetchPage(url)),
-        updateFields: (url, newValues) => dispatch(actions.updateFields(url, newValues))
+        updateFields: (url, formData, newValues) => dispatch(actions.updateFields(url, formData, newValues))
     }
 }
 

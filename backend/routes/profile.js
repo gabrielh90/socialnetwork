@@ -136,19 +136,18 @@ const updateProfile = async (req, res) => {
         }).then(user => {
             let userAccountData = {}
             let userProfileData = {}
+            if(req.file !== undefined) {
+                if(userAccFields.indexOf(req.file.originalname) > -1) {
+                    userAccountData[req.file.originalname] = image;
+                } else {
+                    userProfileData[req.file.originalname] = image;
+                }
+            }
             Object.keys(req.body).map((value, idx) => {
                 if(userAccFields.indexOf(value) > -1) {
-                    if(value === 'userAvatar') {
-                        userAccountData[value] = image;
-                    } else {
-                        userAccountData[value] = req.body[value];
-                    }
+                    userAccountData[value] = req.body[value];
                 } else {
-                    if(value === 'coverPhoto') {
-                        userProfileData[value] = image;
-                    } else {
-                        userProfileData[value] = req.body[value];
-                    }
+                    userProfileData[value] = req.body[value];
                 }
             })
             console.log(userAccountData)

@@ -42,11 +42,12 @@ export const fetchPage = (url) => {
     }
 }
 
-export const updateFields = (url, newValues) => {
+export const updateFields = (url, formData, newValues) => {
     return dispatch => {
-        dispatch(pageContentUpdate(newValues));
+        console.log(newValues)
+        dispatch(pageContentUpdate(newValues ? newValues : formData));
         axios
-        .post(url+'/update', newValues, {
+        .post(url+'/update', formData, {
             headers: {
             "Content-Type": "multipart/form-data",
             },})

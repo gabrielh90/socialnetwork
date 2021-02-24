@@ -22,10 +22,17 @@
     height: calc(var(--pageWidth) / 2.5);
     margin-bottom: 30px;
 }
-.addBio {
+.shortDescription {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+}
+.bioUpdate {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 300px;
 }
 .navigation {
     display: flex;

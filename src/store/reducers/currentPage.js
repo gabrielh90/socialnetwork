@@ -14,7 +14,6 @@ const pageFetchStart = (state, action) => {
     }
 }
 const pageFetchSuccess = (state, action) => {
-    console.log('page loaded', action.content);
     return {
         ...state,
         content: action.content,
@@ -29,9 +28,15 @@ const pageFetchFailed = (state, action) => {
     }
 }
 const pageContentUpdate = (state, action) => {
+    console.log(action.newValues);
+    const content = {
+        ...state.content,
+        ...action.newValues
+    }
+    console.log(content)
     return {
         ...state,
-        ...action.newValues
+        content: content
     }
 }
 const reducer = (state = initialState, action) => {
