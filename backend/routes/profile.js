@@ -121,10 +121,6 @@ const updateProfile = async (req, res) => {
     console.log(isUserAuthenticated)
     if(isUserAuthenticated.authenticated === true) {
         let image;
-        // await uploadImage(req, res)
-        //     .catch((error) => {
-        //         console.log(error);
-        // });
         if(req.file !== undefined) {
             const fs = require('fs')
             image = fs.readFileSync(req.file.path);
@@ -134,6 +130,15 @@ const updateProfile = async (req, res) => {
             _id: isUserAuthenticated.userId,
             userProfileId: req.params.id
         }).then(user => {
+            if(!user) {
+                res.json({
+                    authenticated: true,
+                    message: 'Something went wrong!'
+                    // message: 'Or Profile doesn\'t exist!'
+                    // message: 'Or You have tried to modify someone else\'s profile!'
+                })
+                return;
+            }
             let userAccountData = {}
             let userProfileData = {}
             if(req.file !== undefined) {

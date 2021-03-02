@@ -4,12 +4,11 @@ import styles from './ProfilePageHeader.css';
 import * as actions from '../../store/actions';
 import { withRouter } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Avatar, Badge, Button, ButtonGroup, Divider, fade, Paper, Tab, Tabs, TextField, Typography, withStyles } from '@material-ui/core';
+import { Avatar, Backdrop, Badge, Button, Divider, Fade, fade, Modal, Paper, Tab, Tabs, TextField, Typography, withStyles } from '@material-ui/core';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import PhotoOutlinedIcon from '@material-ui/icons/PhotoOutlined';
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import MessageIcon from '@material-ui/icons/Message';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -145,6 +144,8 @@ function ProfilePage(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [updateBio, setUpdateBio] = useState(false)
     const [newBio, setNewBio] = useState(props.pageContent.shortDescription)
+    const [imageModal, setImageModal] = useState(null)
+    const myProfile = props.history.location.pathname === ('/' + props.userProfileId);
     // const profilePageHandler = (event, userId) => {
     //     props.fetchPage('/' + userId);
     //     props.history.push('/' + userId);
@@ -152,9 +153,15 @@ function ProfilePage(props) {
     //   onClick={(event) => profilePageHandler(event, userProfileId)}
 
     useEffect(() => {
+        if(props.pageContent.userProfileId && props.history.location.pathname !== ('/' + props.pageContent.userProfileId)) {
+            props.fetchPage('/' +props.pageContent.userProfileId);
+            props.history.push('/' + props.pageContent.userProfileId);
+        }
         if(Object.keys(props.pageContent).length === 0) {
             // props.fetchPage(props.history.location.pathname);
             // props.history.push('/' + userId);
+           
+        
         }
         return () => {
         }
@@ -171,6 +178,8 @@ function ProfilePage(props) {
         setAnchorEl(null);
     }
     const handleClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation()
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -182,7 +191,7 @@ function ProfilePage(props) {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
-    >
+        >
         <StyledMenuItem>
         <ListItemIcon 
             style={{minWidth: '0', marginRight: '20px'}}
@@ -203,24 +212,46 @@ function ProfilePage(props) {
         </label>
         </StyledMenuItem>
     </StyledMenu>
-    console.log(newBio)
-    console.log(props.pageContent.shortDescription)
+    const modalWindow = <Modal
+            className={styles.modal}
+            open={Boolean(imageModal)}
+            onClose={() => {setImageModal(null)}}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+            timeout: 500,
+            }}
+        >
+        <Fade in={Boolean(imageModal)}>
+            <Paper>
+                <img src={imageModal}/>
+            </Paper>
+        </Fade>
+    </Modal>
+    const handlerModalImage = (event, img) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setImageModal(img)
+    }
     return (
         <div className={styles.hero}>
-            <div className={styles.cover} style={{backgroundImage: `url(${props.pageContent?.coverPhoto})`}}>
+            <div className={styles.cover} 
+                style={Boolean(props.pageContent?.coverPhoto) ? {backgroundImage: `url(${props.pageContent?.coverPhoto})`} : {}}
+                onClick={(event)=>handlerModalImage(event, props.pageContent?.coverPhoto)}
+                >
                 <StyledBadge
-                    onClick={handleClick}
+                    onClick={(event)=>{handlerModalImage(event, props.pageContent?.userAvatar);}}
                     id='userAvatar'
                     overlap="circle"
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
                     }}
-                    badgeContent={<SmallAvatar><PhotoCameraIcon/></SmallAvatar>}
+                    badgeContent={myProfile && <SmallAvatar onClick={handleClick}><PhotoCameraIcon/></SmallAvatar>}
                 >
                     <BigAvatar alt={props.pageContent.firstName} src={props.pageContent?.userAvatar} />
                 </StyledBadge>
-                <AddCoverButton
+                {myProfile && <AddCoverButton
                     onClick={handleClick}
                     id='coverPhoto'
                     disableElevation={true}
@@ -229,9 +260,10 @@ function ProfilePage(props) {
                     startIcon={<PhotoCameraIcon />}
                 >
                     {props.pageContent.coverPhoto === null? 'Add':'Change'}  Cover Photo
-                </AddCoverButton>
+                </AddCoverButton>}
                 {selectPhoto}
             </div>
+            {modalWindow}
             <Typography variant="h4" align="center">
                 {props.pageContent['firstName'] + ' ' + props.pageContent['lastName']}
             </Typography>
@@ -300,6 +332,7 @@ function ProfilePage(props) {
                 <StyledTab aria-label="home round icon" label="Friends"/>
                 <StyledTab aria-label="home round icon" label="Photos"/>
             </StyledTabs>
+            {props.history.location.pathname !== ('/' + props.userProfileId) && 
             <Button
                 variant="text"
                 color="primary"
@@ -307,7 +340,7 @@ function ProfilePage(props) {
                 startIcon={<PersonAddIcon  style={{ transform: 'rotateY(180deg)' }}/>}
             >
                 Add friend
-            </Button>
+            </Button>}
             
             </div>
         </div>
@@ -315,7 +348,8 @@ function ProfilePage(props) {
 }
 const mapStateToProps = state => {
     return {
-        pageContent: state.currentPage.content
+        pageContent: state.currentPage.content,
+        userProfileId: state.auth.userProfileId,
     }
 }
 
