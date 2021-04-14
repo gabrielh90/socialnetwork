@@ -1,11 +1,10 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import {connect} from 'react-redux';
-import {logout, fetchPage} from '../../store/actions';
+import * as actions from '../../store/actions';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -146,6 +145,12 @@ function CustomAppBar(props) {
   const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  useEffect(() => {
+    props.getHeaderInfo(`/users/${props.userId}`);
+    return () => {
+    }
+  }, [])
+
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   // console.log(props.history.location.pathname);
   const handleMobileMenuClose = () => {
@@ -157,8 +162,8 @@ function CustomAppBar(props) {
   };
 
   const profilePageHandler = (event) => {
-    props.fetchPage('/' + props.userProfileId);
-    props.history.push('/' + props.userProfileId);
+    props.fetchPage(`/users/${props.userId}`);
+    props.history.push('/' + props.userId);
   }
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -278,7 +283,7 @@ function CustomAppBar(props) {
                               root: classes.chipRoot,
                               avatar: classes.chipAvatar,
                     }}
-                    className={props.history.location.pathname === ('/' + props.userProfileId) ? classes.blueColor : ''}
+                    className={props.history.location.pathname === ('/' + props.userId) ? classes.blueColor : ''}
                     style={{// background: 'transparent', '&:hover': { background: 'gray'}
                     }}
                   />
@@ -327,17 +332,18 @@ function CustomAppBar(props) {
 
 const mapStateToProps = state => {
   return {
-    userProfileId: state.auth.userProfileId,
-    firstName: state.auth.firstName,
-    lastName: state.auth.lastName,
-    userAvatar: state.auth.userAvatar,
+    userId: state.auth.userId,
+    firstName: state.header.firstName,
+    lastName: state.header.lastName,
+    userAvatar: state.header.avatar,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    logOut: () => dispatch(logout()),
-    fetchPage: (url) => dispatch(fetchPage(url))
+    logOut: () => dispatch(actions.logout()),
+    fetchPage: (url) => dispatch(actions.fetchPage(url)),
+    getHeaderInfo: (url) => dispatch(actions.fetchHeaderInfo(url)),
   }
 }
 

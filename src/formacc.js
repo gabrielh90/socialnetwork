@@ -112,7 +112,7 @@ import axios from 'axios'
               {fileInfos &&
                 fileInfos.map((file, index) => (
                   <li className="list-group-item" key={index}>
-                    <a href={file.url}>{file.name}</a>
+                    <a href={file.url}>{file.url }</a>
                     <img style={{width: '100px'}} src={file.url} alt="bala" />
                   </li>
                 ))}

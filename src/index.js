@@ -1,14 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {applyMiddleware, compose, createStore} from 'redux'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import {Provider} from 'react-redux'
-import App from './containers/App'
-import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import styles from './index.css'
-import {BrowserRouter} from 'react-router-dom'
-import rootReducer from './store/reducers'
-import FormAcc from './formacc.js'
+import {Provider} from 'react-redux';
+import App from './containers/App';
+import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import styles from './index.css';
+import {BrowserRouter} from 'react-router-dom';
+import rootReducer from './store/reducers';
+import FormAcc from './formacc.js';
+import WebFont from "webfontloader";
+WebFont.load({google: {families: ["Roboto:300,400,500"]}});
 
 const theme = createMuiTheme({
   palette: {

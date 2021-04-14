@@ -28,12 +28,12 @@ const pageFetchFailed = (state, action) => {
     }
 }
 const pageContentUpdate = (state, action) => {
-    console.log(action.newValues);
+    // console.log(action.newValues);
     const content = {
         ...state.content,
         ...action.newValues
     }
-    console.log(content)
+    // console.log(content)
     return {
         ...state,
         content: content

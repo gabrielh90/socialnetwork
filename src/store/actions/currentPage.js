@@ -25,29 +25,31 @@ export const pageContentUpdate = (newValues) => {
         newValues: newValues
     }
 }
-
 export const fetchPage = (url) => {
     return dispatch => {
         dispatch(fetchStart(url));
-        axios.post(url, {})
+        axios.get(url, {})
         .then(res => {
             // console.log(res.data);
-            dispatch(fetchSuccess(res.data));
-            //return data
+            if(res.data.success) {
+                dispatch(fetchSuccess(res.data.data));
+            } else {
+                dispatch(fetchFailed(res.data.error));
+            }
         })
         .catch(err => {
-            console.log(err);
-            dispatch(fetchFailed(err.response.data.error));
+            console.log(err.response.data);
+            dispatch(fetchFailed({...err.response.data.error, status: err.response.status}));
         })
     }
 }
 
-export const updateFields = (url, formData, newValues) => {
+export const updateLocalAndDBFields = (url, formData, newValues) => {
     return dispatch => {
-        console.log(newValues)
+        // console.log(newValues)
         dispatch(pageContentUpdate(newValues ? newValues : formData));
         axios
-        .post(url+'/update', formData, {
+        .put(url, formData, {
             headers: {
             "Content-Type": "multipart/form-data",
             },})
@@ -56,7 +58,7 @@ export const updateFields = (url, formData, newValues) => {
         })
         .catch(err => {
             console.log(err);
-            dispatch(fetchFailed(err.response.data.error));
+            dispatch(fetchFailed({...err.response.data.error, status: err.response.status}));
         })
     }
 }

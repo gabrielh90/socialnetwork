@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 
 const userProfileSchema = new mongoose.Schema(
     {
-        userId: {
+        userAccount: {
             type: mongoose.Types.ObjectId, 
             ref: "UserAccount",
             required: true,
         },
         coverPhoto: {
             type: Buffer,
+            default: null,
         },
         shortDescription: {
             type: String,
@@ -61,12 +62,14 @@ const userProfileSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId, 
             ref: "Posts",
         }],
-        
         groups: [{
             type: mongoose.Types.ObjectId, 
             ref: "Group",
         }],
-        
+        fieldsUpdated: {
+            type: Boolean,
+            default: false
+        }
     }
 )
 

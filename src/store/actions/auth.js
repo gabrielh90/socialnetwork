@@ -19,11 +19,8 @@ export const authSuccess = (timeoutTimer, res) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         token: res.token,
-        userProfileId: res.userProfileId,
-        email: res.email, 
-        userAvatar: res.userAvatar,
-        firstName: res.firstName,
-        lastName: res.lastName,
+        email: res.email,
+        userId: res.userId,
         timeoutTimer: timeoutTimer,
     }
 }
@@ -38,13 +35,20 @@ export const logout = () => {
         dispatch({type: actionTypes.AUTH_LOGOUT})
     }
 }
-export const authTimeout = (timerTimeout) => {
-    return {
-        type: actionTypes.AUTH_UPDATE_TIMEOUT,
-        timerTimeout: timerTimeout
+export const authTimeout = () => {
+    return (dispatch, getState) => {
+        dispatch({type: actionTypes.AUTH_TIMEOUT});
+        dispatch(logout());
     }
 }
-export const updateAuthTimeout = (logoutTime) => {
+export const updateAuthTimeout = (timerTimeout, userId) => {
+    return {
+        type: actionTypes.AUTH_UPDATE_TIMEOUT,
+        timerTimeout: timerTimeout,
+        userId: userId,
+    }
+}
+export const updateAuthTimer = (logoutTime) => {
     return (dispatch, getState) => {
         const expirationTime = (new Date(logoutTime).getTime() - new Date().getTime())/1000
         // console.log(getState().auth);
@@ -53,107 +57,52 @@ export const updateAuthTimeout = (logoutTime) => {
         }
         const timerTimeout = setTimeout(() =>{
                             console.log('Session has expired!');
-                            dispatch(logout())
+                            dispatch(authTimeout())
                         }, expirationTime * 1000);
         return timerTimeout;
-        //dispatch(authTimeout(timerTimeout));
-        //Doesn't work with lambda function
-        // dispatch(() => {return {
-        //         type: actionTypes.AUTH_TIMEOUT,
-        //         timeoutTimer: timerTimeout
-        //     }}
-        // )
     }
 };
-function arrayBufferToBase64(buffer, avatarType = '') {
-    var binary = '';
-    var bytes = [].slice.call(new Uint8Array(buffer));        
-    bytes.forEach((b) => binary += String.fromCharCode(b));        
-    return 'data:' + avatarType + ';base64,' + window.btoa(binary);
-};
 
-export const tokenAuthRequest = (url='/') => {
+export const updateTokenTimeout = () => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
+    const expirationDate = new Date(localStorage.getItem('expirationDate'));
     return  (dispatch, getState) => {
         dispatch(authStart());
-        if(!token && !email) {
-            dispatch(logout())
-        } else {
-            const expirationDate = new Date(localStorage.getItem('expirationDate'));
-            if(expirationDate < new Date()) {
-                dispatch(logout());
-            } else {
-                const userCredentials = { 
-                    email: email,
-                    token: token,
-                }
-                axios.post('http://localhost:5000/login', userCredentials)
-                .then(res => {
-                        // console.log(res);
-                        if(res.data.authenticated === true) {
-                                // console.log(res.data);
-                                localStorage.setItem('expirationDate', res.data.logoutTime);
-                                const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
-                                dispatch(authSuccess(timeoutTimer, res.data));
-                        } else {
-                            console.log(res);
-                            dispatch(authFail(res.data.error));
-                        }
+        // if((token !== '' && email !== '') || url !== '/') {
+        if(Boolean(token) && (expirationDate > new Date())) {
+            axios.get('http://localhost:5000/api/v1/auth/renewtokentimeout', 
+                    {
+                        headers: {
+                        Authorization: `Bearer ${token}` 
                     }
-                )
-                .catch(err => {
-                    console.log(err);
-                    dispatch(authFail(err.response.data.error));
-                })
-            }
-        }
-    }
-}
-export const tokenAuthRequestFetchPage = (url='/') => {
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-    return  (dispatch, getState) => {
-        dispatch(authStart());
-        let userCredentials = {
-            email: email,
-            token: token,
-            url: url
-        }
-        const expirationDate = new Date(localStorage.getItem('expirationDate'));
-        if(expirationDate < new Date()) {
-            dispatch(logout());
-            userCredentials = {
-                ...userCredentials,
-                email: '',
-                token: ''
-            }
-        }
-
-        if((token !== '' && email !== '') || url !== '/') {
-            axios.post('http://localhost:5000/login', userCredentials)
+                    })
             .then(res => {
                     // console.log(res);
-                    if(res.data.authenticated === true) {
+                    if(res.data.success === true) {
                         // console.log(res.data);
-                        localStorage.setItem('expirationDate', res.data.logoutTime);
-                        const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
-                        dispatch(authSuccess(timeoutTimer, res.data));
-                    } else if(res.data.authenticated !== true && userCredentials.email !== ''){
+                        localStorage.setItem('expirationDate', res.data.data.logoutTime);
+                        const timeoutTimer = dispatch(updateAuthTimer(res.data.data.logoutTime));
+                        dispatch(updateAuthTimeout(timeoutTimer, res.data.data.userId));
+                    } else {
                         console.log(res);
                         dispatch(authFail(res.data.error));
                     }
-                    //dispatch also data
                 }
             )
             .catch(err => {
-                console.log(err);
-                dispatch(authFail(err.response.data.error));
+                console.log(err.response.data);
+                // dispatch(logout());
+                if( err.response.data.error.name === "Not authorized to access this route" && 
+                    err.response.data.error.description.authenticated === false){
+                        dispatch(authFail(err.response.data.error));
+                }
             })
+        } else {
+            dispatch(logout());
         }
     }
 }
-
 export const passwordAuthRequest = (email, password, url='/') => {
     return dispatch => {
         dispatch(authStart());
@@ -164,16 +113,15 @@ export const passwordAuthRequest = (email, password, url='/') => {
         }
         // console.log(userCredentials);
         // console.log('http://localhost:5000/' + url);
-        axios.post('http://localhost:5000/login', userCredentials)
+        axios.post('http://localhost:5000/api/v1/auth/login', userCredentials)
             .then(res => {
-                //console.log(res.data);
-                if(res.data.authenticated === true) {
-                    // console.log(res.data);
-                    localStorage.setItem('token',  res.data.token);
-                    localStorage.setItem('email', res.data.email);
-                    localStorage.setItem('expirationDate', res.data.logoutTime);
-                    const timeoutTimer = dispatch(updateAuthTimeout(res.data.logoutTime));
-                    dispatch(authSuccess(timeoutTimer, res.data));
+                console.log(res.data);
+                if(res.data.success === true) {
+                    localStorage.setItem('token',  res.data.data.token);
+                    localStorage.setItem('email', res.data.data.email);
+                    localStorage.setItem('expirationDate', res.data.data.logoutTime);
+                    const timeoutTimer = dispatch(updateAuthTimer(res.data.data.logoutTime));
+                    dispatch(authSuccess(timeoutTimer, res.data.data));
                 } else {
                     console.log(res.data.error);
                     dispatch(authFail(res.data.error));
@@ -181,8 +129,9 @@ export const passwordAuthRequest = (email, password, url='/') => {
                 //return data
             })
             .catch(err => {
-                console.log(err);
-                // dispatch(authFail(err.response.data.error));
+                console.log(err.response);
+                if(!err.response.data.success)
+                    dispatch(authFail(err.response.data.error));
             })
     }
 }

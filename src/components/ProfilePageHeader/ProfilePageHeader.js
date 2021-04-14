@@ -5,10 +5,13 @@ import * as actions from '../../store/actions';
 import { withRouter } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Avatar, Backdrop, Badge, Button, Divider, Fade, fade, Modal, Paper, Tab, Tabs, TextField, Typography, withStyles } from '@material-ui/core';
+import Add from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import PhotoOutlinedIcon from '@material-ui/icons/PhotoOutlined';
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -119,15 +122,15 @@ const AddBioButton = withStyles((theme) => ({
 const StyledTab = withStyles((theme) => ({
     // Name of the rule
     root: {
-      // Some CSS
-      minWidth: '32px',
-    //   flex: '1 1 auto',
-      width: 'auto',
-      borderRadius:5,
-      //background: fade(theme.palette.common.black, 0.04),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.black, 0.07),
-      },
+        // Some CSS
+        minWidth: '32px',
+        //   flex: '1 1 auto',
+        width: 'auto',
+        borderRadius:5,
+        //background: fade(theme.palette.common.black, 0.04),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.black, 0.07),
+        },
     },
 }))(Tab);
 
@@ -145,53 +148,59 @@ function ProfilePage(props) {
     const [updateBio, setUpdateBio] = useState(false)
     const [newBio, setNewBio] = useState(props.pageContent.shortDescription)
     const [imageModal, setImageModal] = useState(null)
-    const myProfile = props.history.location.pathname === ('/' + props.userProfileId);
-    // const profilePageHandler = (event, userId) => {
-    //     props.fetchPage('/' + userId);
-    //     props.history.push('/' + userId);
-    //   }
-    //   onClick={(event) => profilePageHandler(event, userProfileId)}
-
+    const myProfile = props.match.params.id === props.userId;
     useEffect(() => {
-        if(props.pageContent.userProfileId && props.history.location.pathname !== ('/' + props.pageContent.userProfileId)) {
-            props.fetchPage('/' +props.pageContent.userProfileId);
-            props.history.push('/' + props.pageContent.userProfileId);
-        }
+        // if(props.pageContent.userId && props.history.location.pathname !== ('/' + props.pageContent.userId)) {
+        //     props.fetchPage('/users/' + props.pageContent.userId);
+        //     props.history.push('/' + props.pageContent.userId);
+        // }
         if(Object.keys(props.pageContent).length === 0) {
             // props.fetchPage(props.history.location.pathname);
             // props.history.push('/' + userId);
-           
-        
         }
         return () => {
         }
-    }, [])
-
+    }, []);
     const inputFileChangeHandler = (event) => {
         let formData = new FormData();
-        formData.append('file', event.target.files[0], anchorEl.id);
-        // formData.append('file', event.target.files[0]);
+        // formData.append('file', event.target.files[0], anchorEl.id);
+        formData.append(anchorEl.id, event.target.files[0]);
         // formData.append(anchorEl.id, true);
 
-        let newReactData = Object.assign({},{[anchorEl.id] : URL.createObjectURL(event.target.files[0])});
-        props.updateFields(props.history.location.pathname, formData, newReactData);
+        let updatePageData = Object.assign({},{[anchorEl.id] : URL.createObjectURL(event.target.files[0])});
+        props.updateFields('/users/' + props.userId, formData, updatePageData);
         setAnchorEl(null);
+    }
+    const changeFriendStatus = (event, approval) => {
+        switch(props.pageContent.friendStatus) {
+            case 'friends':  axios.delete('/friends/' + props.pageContent.userId); 
+                            props.updateLocalFields({friendStatus: "stranger"})
+                            break;
+            case 'friendRequestSent':  axios.delete('friends/sentFriendRequests/' + props.pageContent.userId); 
+                                        props.updateLocalFields({friendStatus: "stranger"})
+                                        break;
+            case 'friendRequestReceived': 
+                if(approval) {axios.put('friends/receivedFriendRequests/' + props.pageContent.userId); props.updateLocalFields({friendStatus: "friends"})}
+                else if(!approval) {axios.delete('friends/receivedFriendRequests/' + props.pageContent.userId); props.updateLocalFields({friendStatus: "stranger"})}
+                break;
+            default: axios.put('/friends/sentFriendRequests/' + props.pageContent.userId); props.updateLocalFields({friendStatus: 'friendRequestSent'})
+        }
     }
     const handleClick = (event) => {
         event.preventDefault();
-        event.stopPropagation()
+        event.stopPropagation();
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const selectPhoto = <StyledMenu
+    const changePhoto = <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        >
+    >
         <StyledMenuItem>
         <ListItemIcon 
             style={{minWidth: '0', marginRight: '20px'}}
@@ -202,7 +211,7 @@ function ProfilePage(props) {
         </StyledMenuItem>
         <StyledMenuItem>
         <input type="file" accept="image/*" style={{display: "none",}} id="upload-photo"
-            onChange={(event)=>inputFileChangeHandler(event)}
+            onChange={(event)=>inputFileChangeHandler(event)} 
         />
         <label htmlFor="upload-photo" style={{display: 'flex', alignItems: 'center'}}>
             <ListItemIcon style={{minWidth: '0', marginRight: '20px'}}>
@@ -224,7 +233,7 @@ function ProfilePage(props) {
         >
         <Fade in={Boolean(imageModal)}>
             <Paper>
-                <img src={imageModal}/>
+                <img src={imageModal} alt=""/>
             </Paper>
         </Fade>
     </Modal>
@@ -240,57 +249,57 @@ function ProfilePage(props) {
                 onClick={(event)=>handlerModalImage(event, props.pageContent?.coverPhoto)}
                 >
                 <StyledBadge
-                    onClick={(event)=>{handlerModalImage(event, props.pageContent?.userAvatar);}}
-                    id='userAvatar'
+                    onClick={(event)=>{handlerModalImage(event, props.pageContent?.avatar);}}
                     overlap="circle"
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
                     }}
-                    badgeContent={myProfile && <SmallAvatar onClick={handleClick}><PhotoCameraIcon/></SmallAvatar>}
+                    badgeContent={myProfile && <SmallAvatar id='avatar' onClick={(event)=>handleClick(event)}><PhotoCameraIcon/></SmallAvatar>}
                 >
-                    <BigAvatar alt={props.pageContent.firstName} src={props.pageContent?.userAvatar} />
+                    <BigAvatar alt={props.pageContent.firstName} src={props.pageContent?.avatar} />
                 </StyledBadge>
                 {myProfile && <AddCoverButton
-                    onClick={handleClick}
+                    onClick={(event)=>handleClick(event)}
                     id='coverPhoto'
                     disableElevation={true}
                     variant="contained"
                     color="default"
                     startIcon={<PhotoCameraIcon />}
                 >
-                    {props.pageContent.coverPhoto === null? 'Add':'Change'}  Cover Photo
+                    {props.pageContent.coverPhoto === undefined? 'Add':'Change'}  Cover Photo
                 </AddCoverButton>}
-                {selectPhoto}
             </div>
+            {changePhoto}
             {modalWindow}
             <Typography variant="h4" align="center">
                 {props.pageContent['firstName'] + ' ' + props.pageContent['lastName']}
             </Typography>
             <div className={styles.shortDescription}>
                 {!updateBio && 
-                <>
-                <Typography variant="subtitle1" display="block" align="center">
-                    {props.pageContent.shortDescription}
-                </Typography>
-                <AddBioButton 
-                    variant="text" 
-                    color='primary' 
-                    disableRipple={true}
-                    disableFocusRipple={true}
-                    disableElevation={true}
-                    onClick={() => {
-                        setNewBio(props.pageContent.shortDescription);
-                        setUpdateBio(true);
-                    }}
-                >
-                    {Boolean(props.pageContent.shortDescription) ? 
-                        "EditBio"
-                        :
-                        "AddBio"
-                    }
-                </AddBioButton>
-                </>}
+                    <Typography variant="subtitle1" display="block" align="center">
+                        {props.pageContent.shortDescription}
+                    </Typography>
+                }
+                {!updateBio && myProfile && 
+                    <AddBioButton 
+                        variant="text"
+                        color='primary' 
+                        disableRipple={true}
+                        disableFocusRipple={true}
+                        disableElevation={true}
+                        onClick={() => {
+                            setNewBio(props.pageContent.shortDescription);
+                            setUpdateBio(true);
+                        }}
+                    >
+                        {Boolean(props.pageContent.shortDescription) ? 
+                            "EditBio"
+                            :
+                            "AddBio"
+                        }
+                    </AddBioButton>
+                }
 
                 {updateBio  && <div className={styles.bioUpdate}>
                     <TextField
@@ -311,7 +320,7 @@ function ProfilePage(props) {
                         onClick={() => setUpdateBio(false)}
                         >Cancel</Button>
                         <Button variant="contained" disabled={newBio === props.pageContent.shortDescription} 
-                            onClick={()=>{props.updateFields(props.history.location.pathname, {shortDescription :newBio});}}
+                            onClick={()=>{props.updateFields('/users/' + props.userId, {shortDescription :newBio});setUpdateBio(false);}}
                         >Save</Button> 
                     </div>
                 </div>}
@@ -319,29 +328,69 @@ function ProfilePage(props) {
             <Divider variant="middle" style={{marginTop: '18px', marginBottom: '18px'}} />
             <div className={styles.navigation}>
             <StyledTabs
-                value={1}
-                //onChange={handleChange}
+                value={props.selectedTab}
+                onChange={props.handleChangeTab}
                 variant="standard"
                 scrollButtons="on"
                 indicatorColor="primary"
                 textColor="primary"
                 aria-label="prevent tabs example"
                 >
-                <StyledTab aria-label="home round icon" label="Posts"/>
-                <StyledTab aria-label="home round icon" label="About"/>
-                <StyledTab aria-label="home round icon" label="Friends"/>
-                <StyledTab aria-label="home round icon" label="Photos"/>
+                <StyledTab value="posts" aria-label="home round icon" label="Posts"/>
+                <StyledTab value="about" aria-label="home round icon" label="About"/>
+                <StyledTab value="friends" aria-label="home round icon" label="Friends"/>
+                <StyledTab value="photos" aria-label="home round icon" label="Photos"/>
             </StyledTabs>
-            {props.history.location.pathname !== ('/' + props.userProfileId) && 
-            <Button
-                variant="text"
-                color="primary"
-                // className={classes.button}
-                startIcon={<PersonAddIcon  style={{ transform: 'rotateY(180deg)' }}/>}
-            >
-                Add friend
-            </Button>}
-            
+            {myProfile && 
+                <Button
+                    variant="contained"
+                    color="primary"
+                    style={{color: 'white', alignSelf: 'center'}}
+                    // className={classes.button}
+                    onClick={(event)=>props.handleAddPost((current => !current))}
+                    startIcon={!props.addPost && <Add />}
+                >
+                    {!props.addPost ? "Add Post" : "Cancel Post"}
+                </Button>}
+            {!myProfile && 
+                <>
+                    {
+                        (props.pageContent.friendStatus==='stranger'  ||
+                        props.pageContent.friendStatus==='friendRequestReceived')
+                        &&
+                        <Button
+                            variant="text"
+                            color="primary"
+                            onClick={(event)=>changeFriendStatus(event, true)}
+                            startIcon={<PersonAddIcon />}
+                        >
+                            {props.pageContent.friendStatus === 'stranger' && "Add friend" ||
+                                props.pageContent.friendStatus==='friendRequestReceived' && "Accept request"
+                            }
+                        </Button>
+                    }
+                    {   (props.pageContent.friendStatus==='friends' ||
+                        props.pageContent.friendStatus==='friendRequestSent' ||
+                        props.pageContent.friendStatus==='friendRequestReceived')
+                        &&
+                        <Button
+                        variant="text"
+                        color="primary"
+                        // className={classes.button}
+                        onClick={(event)=>changeFriendStatus(event, false)}
+                        startIcon={<PersonAddDisabledIcon />}
+                    >
+                        {props.pageContent.friendStatus==='friends' ?
+                            "Delete friend" :
+                            props.pageContent.friendStatus==='friendRequestSent' ?
+                            "Cancel friend request" :
+                            //props.pageContent.friendStatus==='friendRequestReceived' ?
+                            "Decline friend request"
+                        }
+                        </Button>
+                    }
+                </>
+            }
             </div>
         </div>
     )
@@ -349,14 +398,15 @@ function ProfilePage(props) {
 const mapStateToProps = state => {
     return {
         pageContent: state.currentPage.content,
-        userProfileId: state.auth.userProfileId,
+        userId: state.auth.userId,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         fetchPage: (url) => dispatch(actions.fetchPage(url)),
-        updateFields: (url, formData, newValues) => dispatch(actions.updateFields(url, formData, newValues))
+        updateFields: (url, formData, newValues) => dispatch(actions.updateLocalAndDBFields(url, formData, newValues)),
+        updateLocalFields: (newValues) => dispatch(actions.pageContentUpdate(newValues))
     }
 }
 

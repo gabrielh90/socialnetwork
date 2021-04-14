@@ -75,6 +75,7 @@ const emotions = [
         icon: SentimentVerySatisfiedOutlinedIcon,
     },
 ]
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 13,
         width: '100%',
         padding: `${theme.spacing(1)}px 0px`,
+        marginBottom: `${theme.spacing(1.5)}px`,
         backgroundColor: theme.palette.common.white,
     },
     image: {
@@ -177,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ButtonBases() {
+const Post = (props) => {
 const classes = useStyles();
 const [emotion, setEmotion] = useState({name: 'Like', icon: ThumbUpAltOutlinedIcon, selected: -1})
 const [showEmotionsMenu, setShowEmotionsMenu] = useState(false)
@@ -185,75 +187,76 @@ const [delayEmotionMenu, setDelayEmotionMenu] = useState(false)
 const [focusInput, setFocusInput] = useState(null)
 const imgGrid = () => {
     //return <div>asdasdada</div>
-    if(tileData.length === 1) {
+    if(!props.images) return null;
+    if(props.images.length === 1) {
         return  <div className={classes.albumOnePhoto}>
-                    <img src={tileData[0].img} alt={tileData[0].title}/>
+                    <img src={props.images[0]} alt=''/>
                 </div>
-    } else if (tileData.length % 2 === 0) {
+    } else if (props.images.length % 2 === 0) {
         return  <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
                              maxHeight: '600px', overflow: 'hidden',}}>
-                    {tileData.map((tile, index) => {
-                                if(index === 4 && tileData.length > 4) {
-                                    return <div key={index}>
-                                        <img src={tile.img} alt={tile.title}/>
+                    {props.images.map((image, idx) => {
+                                if(idx === 4 && props.images.length > 4) {
+                                    return <div key={idx}>
+                                        <img key={idx} src={image} alt=''/>
                                     </div>
                                 } else {
-                                    return <div key={index} className={classes.albumMultiplePhoto}>
-                                        <img src={tile.img} alt={tile.title} style={{maxWidth: '100%'}}/>
+                                    return <div key={idx} className={classes.albumMultiplePhoto}>
+                                        <img key={idx} src={image} alt='' style={{maxWidth: '100%'}}/>
                                     </div>
                                 }
                             }
                         )
                     }
                 </div>
-    } else if(tileData.length === 3) {
+    } else if(props.images.length === 3) {
         return  <div style={{
                             display: 'grid', 
                             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                             maxHeight: '600px', overflow: 'hidden',
                             }}>
-                    {tileData.map((tile, index) => {
+                    {props.images.map((image, idx) => {
                         let gridRow = {gridRow: '1 / span 2'}
-                        if(index === 0) {
+                        if(idx === 0) {
                             gridRow = {gridRow: '1 / span 2'}
-                        }else if(index === 1) {
+                        }else if(idx === 1) {
                             gridRow = {gridRow: '1 / 2'}
                         }
-                        else if(index === 2) {
+                        else if(idx === 2) {
                             gridRow = {gridRow: '2 / 3'}
                         }
                         return  <div style={gridRow}
                                     className={classes.albumMultiplePhoto}>
-                                        <img src={tile.img} alt={tile.title} style={{maxWidth: '100%'}}/>
+                                        <img  key={idx} src={image} alt='' style={{maxWidth: '100%'}}/>
                                 </div>
                         })
                     }
                 </div>
-    } else if(tileData.length === 5) {
+    } else if(props.images.length === 5) {
         return  <div style={{
                             display: 'grid', 
                             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                             maxHeight: '600px', overflow: 'hidden',
                             }}>
-                    {tileData.map((tile, index) => {
+                    {props.images.map((image, idx) => {
                         let gridRow = {gridRow: '1 / span 3'}
-                        if(index === 0) {
+                        if(idx === 0) {
                             gridRow = {gridRow: '1 / span 3'}
-                        }else if(index === 1) {
+                        }else if(idx === 1) {
                             gridRow = {gridRow: '1 / span 2'}
                         }
-                        else if(index === 2) {
+                        else if(idx === 2) {
                             gridRow = {gridRow: '4 / span 3'}
                         }
-                        else if(index === 3) {
+                        else if(idx === 3) {
                             gridRow = {gridRow: '3 / span 2'}
                         }
-                        else if(index === 4) {
+                        else if(idx === 4) {
                             gridRow = {gridRow: '5 / span 2'}
                         }
                         return  <div style={gridRow}
                                     className={classes.albumMultiplePhoto}>
-                                        <img src={tile.img} alt={tile.title} style={{maxWidth: '100%'}}/>
+                                        <img  key={idx} src={image} style={{maxWidth: '100%'}}/>
                                 </div>
                         })
                     }
@@ -284,15 +287,31 @@ const handleMouseLeave = () => {
         setShowEmotionsMenu(false)
     }, 1000))
 }
+const d = new Date(props.createdAt)
 return (
     <div className={classes.root}>
         <div direction="row" style={{display: 'flex', justifyContent: 'space-around', margin: '0px 16px'}}>
-            <ListElement style={{display: 'inline-flex', padding: '0px' }}/>
+            {/* <ListElement style={{display: 'inline-flex', padding: '0px' }}/> */}
+            <ListElement //key={userId} name={firstName + ' ' + lastName} avatar={avatar} 
+                                details={<Typography variant='caption' color='black'> {d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear()} </Typography>}
+                                //onClick={(event) => profilePageHandler(event, userId)}
+                                />
+
             <IconButton aria-label="delete" style={{display: 'inline-flex', minWidth: '60px'}}>
                 <MoreHorizIcon />
             </IconButton>
         </div>
-        <div style={{display: 'flex'}}>
+            <Typography
+                component="span"
+                variant="subtitle2"
+                color="inherit"
+                align="justify"
+                style={{paddingLeft: '16px', paddingRight: '16px',
+                        textIndent: '16px'}}
+            >
+                {props?.title}
+            </Typography>
+            
             <Typography
                 component="span"
                 variant="body2"
@@ -301,13 +320,11 @@ return (
                 style={{paddingLeft: '16px', paddingRight: '16px',
                         textIndent: '16px'}}
             >
-                Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
+                {props?.aboveText}
             </Typography>
-        </div>
         <div>
             {imgGrid()}
         </div>
-        <div style={{display: 'flex'}}>
             <Typography
                 component="span"
                 variant="body2"
@@ -316,17 +333,16 @@ return (
                 style={{paddingLeft: '16px', paddingRight: '16px',
                         textIndent: '16px'}}
             >
-                Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea, când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective. Nu doar că a supravieţuit timp de cinci secole, dar şi a facut saltul în tipografia electronică practic neschimbată. A fost popularizată în anii '60 odată cu ieşirea colilor Letraset care conţineau pasaje Lorem Ipsum, iar mai recent, prin programele de publicare pentru calculator, ca Aldus PageMaker care includeau versiuni de Lorem Ipsum.
+                {props?.belowText}
             </Typography>
-        </div>
         <Divider variant="middle"  style={{margin: '4px'}}/>
         <div style={{display: 'flex', position: 'relative', width: '100%', padding: '0px 16px'}} >
             <Button
                 onClick={(e) => (handleMouseClick(e, emotion.selected === -1 ? {...emotions[0], selected: 0} : emotion ))}
                 startIcon={<emotion.icon/>}
                 style={{color: emotion.selected === -1 ? 'gray' : 'var(--primary-color)', display: 'inline-flex', width: '32%'}}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={() => handleMouseEnter()}
+                onMouseLeave={() => handleMouseLeave()}
             >
                 {emotion.name}
             </Button>
@@ -335,7 +351,7 @@ return (
                 onClick={() => {focusInput.focus()}}
                 startIcon={<ChatBubbleRoundedIcon/>}
             >
-                Comment
+                Comments
             </Button>
             <Button
                 style={{color: 'gray', display: 'inline-flex', width: '32%'}}
@@ -346,9 +362,9 @@ return (
             {showEmotionsMenu && <LikeCard 
                                         emotions={emotions}
                                         emotionType={emotion}
-                                        handleMouseClick={handleMouseClick}
-                                        handleMouseEnter={handleMouseEnter}
-                                        handleMouseLeave={handleMouseLeave}
+                                        handleMouseClick={() => handleMouseClick()}
+                                        handleMouseEnter={() => handleMouseEnter()}
+                                        handleMouseLeave={() =>handleMouseLeave()}
                                         />}
         </div>
         <Divider variant="middle"  style={{margin: '4px'}}/>
@@ -359,3 +375,5 @@ return (
     </div>
 );
 }
+
+export default Post;

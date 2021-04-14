@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import SearchIcon from '@material-ui/icons/Search';
-import { InputAdornment } from '@material-ui/core';
+import { InputAdornment, Typography } from '@material-ui/core';
 import Zoom from '@material-ui/core/Zoom';
 import { useState } from 'react'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -19,6 +19,7 @@ import useRequest from './../../shared/useRequest'
 import { connect } from 'react-redux'
 import * as actions from './../../store/actions'
 import { withRouter } from 'react-router-dom'
+import ListElement from '../ListElement';
 
 const useStyles = makeStyles((theme) => ({
   searchIconButton: {
@@ -138,8 +139,8 @@ const useStyles = makeStyles((theme) => ({
 function SearchCard(props) {
   const classes = useStyles();
   const [openCard, setOpenCard] = useState(false)
-  const [searchValue, data, loading, reqConfigHandler, reqQueryHandler, cancelRequest] = 
-      useRequest ({method: 'post', url: '/search'}, {name: ''}, 1000);
+  const [searchValue, users, loading, reqConfigHandler, reqQueryHandler, cancelRequest] = 
+      useRequest ({method: 'get', url: '/users/searchuserbyname'}, {name: ''}, 1000);
   
   const handleClick = () => {
     setOpenCard((prev) => !prev);//true
@@ -151,7 +152,7 @@ function SearchCard(props) {
     // console.log('Close card!!');
   };
   const profilePageHandler = (event, userId) => {
-    props.fetchPage('/' + userId);
+    props.fetchPage('/users/' + userId);
     props.history.push('/' + userId);
   }
   const searchCard = 
@@ -183,24 +184,19 @@ function SearchCard(props) {
     </div>
     <CardContent className={classes.cardContent} >
         <List className={classes.list}>
-        {data?.map(({fullname, email, avatar, userProfileId}, id) => (
-            <ListItem button key={id} onClick={(event) => profilePageHandler(event, userProfileId)}>
+        {users.map(({firstName, lastName, email, avatar, userId}) => {
+            return <ListElement key={userId} name={firstName + ' ' + lastName} avatar={avatar} 
+                                details={<Typography variant='caption' color='black'> {email} </Typography>}
+                                onClick={(event) => profilePageHandler(event, userId)}/>
+
+            {/* <ListItem button key={userId} onClick={(event) => profilePageHandler(event, userId)}>
                 <ListItemAvatar>
-                  <Avatar alt={fullname} src={avatar} />
+                  <Avatar alt={firstName + ' ' + lastName} src={avatar} />
                 </ListItemAvatar>
-                <ListItemText primary={fullname} secondary={email} />
-            </ListItem>
-        ))}
+                <ListItemText primary={firstName + ' ' + lastName} secondary={email} />
+            </ListItem> */}
+        })}
         </List>
-        {/* {messages.map(({ id, primary, secondary, person }) => (
-            <ListItem button key={id}>
-                <ListItemAvatar>
-                <Avatar alt="Profile Picture" src={person} />
-                </ListItemAvatar>
-                <ListItemText primary={primary} secondary={secondary} />
-            </ListItem>
-        ))}
-        </List> */}
     </CardContent>
   </Card>
   </Zoom>
@@ -231,7 +227,6 @@ function SearchCard(props) {
               <SearchIcon />
           </IconButton>
         </div>
-
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>

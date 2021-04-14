@@ -6,7 +6,7 @@ import { useRef } from 'react';
 const useRequest = (initReqConfig={method: 'post', url: '/'}, initQueryParams={}, delay = 0) => {
     const [reqConfig, setReqConfig] = useState(initReqConfig);
     const [queryParams, setQueryParams] = useState(initQueryParams);
-    const [responseData, setResponseData] = useState({data: null, loading: false});
+    const [responseData, setResponseData] = useState({data: [], loading: false});
     const [delayTimer, setDelayTimer] = useState(null)
     const source = CancelToken.source();
     const isFirstRun = useRef(true);
@@ -31,9 +31,13 @@ const useRequest = (initReqConfig={method: 'post', url: '/'}, initQueryParams={}
             } else {
                 axiosReq = axios({...reqConfig, data: queryParams, cancelToken: source.token})
             }
-            
+            setResponseData(prev => ({data: prev.data, loading: true}));
             axiosReq
-            .then(response => {setResponseData(prev => ({data: response.data, loading: false}));})
+            .then(response => {
+                console.log(response.data.data);
+                if(response.data.success)
+                    setResponseData(prev => ({data: response.data.data, loading: false}));
+            })
             .catch(error => {
                 if (isCancel(error)) {
                     console.log(error.message);

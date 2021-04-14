@@ -1,7 +1,7 @@
-:root {
+/* :root {
     --pageWidth: 960px;
     --pageHeight: 340px;
-}
+} */
 .hero {
     display: flex;
     flex-direction: column;
@@ -9,15 +9,15 @@
     background-color: white;
     padding-left: calc((100% - var(--pageWidth)) / 2);
     padding-right: calc((100% - var(--pageWidth)) / 2);
-    margin-bottom: 16px;
+    /* margin-bottom: 16px; */
 }
 .cover {
     position: relative;
     background-image: linear-gradient(to bottom, rgb(233, 233, 233) 80%, rgb(99, 99, 99));
     background-repeat: no-repeat;
     background-size: cover;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 9px;
+    border-bottom-right-radius: 9px;
     width: var(--pageWidth);
     height: calc(var(--pageWidth) / 2.5);
     margin-bottom: 30px;

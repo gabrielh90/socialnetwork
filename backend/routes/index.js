@@ -1,27 +1,34 @@
 const express = require("express");
 const router = express.Router();
-const userCreateAcc = require("./userCreateaAcc");
-const createPost = require("./createPost")
+
 
 let routes = (app) => {
-  const login = require('./userLogIn')
-  app.use('/login', login);
-  const recoverAcc = require('./userRecoverAcc');
-  app.use('/recover', recoverAcc);
-  router.post("/newacc", userCreateAcc.create);
-  router.post("/newpost", createPost.newPost);
 
-  router.get("/files", userCreateAcc.getListFiles);
-  router.get("/files/:name", userCreateAcc.download);
+  // const login = require('./___userLogIn')
+  // app.use('/login', login);
+
+  // const home = require('./home')
+  // app.use('/', home);
 
 
-  const search = require('./search')
-  router.post('/search', search.getUsers);
-  const profile = require('./profile')
-  router.post('/:id', profile.getProfile);
-  router.post('/:id/update', profile.updateProfile);
-  const home = require('./home')
-  app.use('/', home);
+  const auth = require('./auth');
+  app.use('/api/v1/auth', auth);
+
+  const users = require('./users');
+  app.use('/api/v1/users', users);
+
+  const friends = require('./friends');
+  app.use('/api/v1/friends', friends);
+
+  const posts = require('./posts');
+  app.use('/api/v1/posts', posts);
+  
+  const reviews = require('./reviews');
+  app.use('/api/v1/reviews', reviews);
+
+  const images = require("./images");
+  app.use('/api/v1/images', images);
+
   app.use(router);
 };
 

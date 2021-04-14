@@ -1,1 +1,0 @@
-export const SESSION_TIMEOUT = 11200;

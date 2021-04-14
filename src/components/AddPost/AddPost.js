@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import {axios} from './../../shared/'
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +10,6 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Icon from '@material-ui/core/Icon';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import axios from '../../shared/axios-base';
 import { CancelToken, isCancel } from 'axios';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        borderRadius: '13px',
+        borderRadius: '9px',
     },
     textArea: {
         width: '100%',
@@ -106,8 +106,9 @@ const getDate = (separator=' ') => {
     return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`;
 };
 
-const AddPost = () => {
+const AddPost = (props) => {
     const [formFields, setformFields] = useState({
+        title: '',
         aboveText: '',
         belowText: '',
         privacy: 10
@@ -122,13 +123,14 @@ const AddPost = () => {
 
     const uploadFile = (onUploadProgress) => {
         let formData = new FormData();
+        formData.append('title', formFields['title']);
         formData.append('aboveText', formFields['aboveText']);
         selectedFiles.forEach(image => {
             formData.append("files", image);
         })
         formData.append('belowText', formFields['belowText']);
         formData.append('privacy', formFields['privacy']);
-        return axios.post('/newpost', formData, {
+        return axios.post('/posts', formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             },
@@ -147,7 +149,12 @@ const AddPost = () => {
             // setProgress(Math.round((100 * event.loaded) / event.total));
 
         })
-        .then((rsp) => {console.log(rsp);})
+        .then((rsp) => {
+            if(rsp.data.success){
+                setformFields({title: '', aboveText: '', belowText: '', privacy: 10});
+                props.handleAddPost(false);
+            }
+            console.log(rsp);})
         .catch((error)=> {
             console.log(error)
             if(isCancel(error)){
@@ -217,6 +224,14 @@ const AddPost = () => {
             <CardContent>
 
                 <TextareaAutosize
+                    rowsMax={1}
+                    aria-label="maximum height"
+                    placeholder="Lorem ipsum dolor sit amet"
+                    value={formFields.title}
+                    className={classes.textArea}
+                    onChange={handleChange('title')}
+                />
+                <TextareaAutosize
                     rowsMax={4}
                     aria-label="maximum height"
                     placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
@@ -232,14 +247,14 @@ const AddPost = () => {
                         className={classes.inputFile}
                         id="images"
                         onChange={selectFiles}/>
-                        <Button variant="contained"
-                            size="large"  
-                            color="primary" 
-                            component="span"
-                            className={classes.customButton}
-                            endIcon={<PhotoCamera/>}>
-                            Select Images
-                        </Button>
+                    <Button variant="contained"
+                        size="large"  
+                        color="primary" 
+                        component="span"
+                        className={classes.customButton}
+                        endIcon={<PhotoCamera/>}>
+                        Select Images
+                    </Button>
                 </label>
         
                 {/* {Images} */}
@@ -278,7 +293,7 @@ const AddPost = () => {
                     color="primary"
                     onClick = {uploadFileService}
                     className={classes.customButton}
-                    endIcon={<Icon>send</Icon>}
+                    startIcon={<Icon>send</Icon>}
                 >
                     Post
                 </Button>
@@ -286,9 +301,8 @@ const AddPost = () => {
                     variant="contained"
                     size="large"
                     color="primary"
-                    onClick = {() => cancelUpload()}
+                    onClick = {() => props.handleAddPost(false)}
                     className={classes.customButton}
-                    endIcon={<Icon>send</Icon>}
                 >
                     Cancel
                 </Button>
@@ -297,4 +311,4 @@ const AddPost = () => {
     )
 }
 
-export default AddPost 
+export default AddPost;

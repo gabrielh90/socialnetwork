@@ -111,7 +111,7 @@ class LogInForm extends Component {
             error = 'Fill in the required fields correctly!';
         this.setState({submitMessage: error});
     }
-
+    
     render() {
         let form = null;
         let formElements = [];
@@ -140,7 +140,7 @@ class LogInForm extends Component {
             >
                 
                 <div className={styles.loginError}>
-                    {this.props.loginError}
+                    {this.props.loginError?.name}
                     {this.state.submitMessage}
                 </div>
                 

@@ -182,7 +182,7 @@ class CreateAccount extends Component {
             formData.append(i, newUser[i])
         }
         // console.log(formData)
-        return axios.post("/newacc", formData, {
+        return axios.post("/users", formData, {
             headers: {
             "Content-Type": "multipart/form-data",
             },
@@ -200,11 +200,11 @@ class CreateAccount extends Component {
         }
         if(sendReq) {
             this.uploadFileService(this.state.formControls['file'].file, (event) => {
-                console.log(event)
+                // console.log(event)
                 // setProgress(Math.round((100 * event.loaded) / event.total));
             })
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 // setMessage(response.data.message);
                 // return getFilesService();
             })

@@ -9,15 +9,15 @@ const ContactCards = () => (
             <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Contacts</Typography>
             <ListElement 
                 name='Pricolici' 
-                description='&#9679;new' 
+                details='&#9679;new' 
                 avatar={AvatarSrc}/>
             <ListElement 
                 name='Pricolici' 
-                description='' 
+                details='' 
                 avatar={AvatarSrc}/>
             <ListElement 
                 name='Pricolici' 
-                description='&#x2709;new' 
+                details='&#x2709;new' 
                 avatar={AvatarSrc}/>
         </Fragment>
 )

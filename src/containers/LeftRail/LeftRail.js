@@ -7,42 +7,42 @@ import Divider from '@material-ui/core/Divider'
 const groups = [
     {
         name: "COVID-19 Information Centre",
-        description: '&#9679;1 new',
+        details: '&#9679;1 new',
         avatar: AvatarSrc,
     },
     {
         name: "Friends",
-        description: '',
+        details: '',
         avatar: AvatarSrc,
     },
     {
         name: "Groups",
-        description: '',
+        details: '',
         avatar: AvatarSrc,
     },
     {
         name: "Video",
-        description: '2 new',
+        details: '2 new',
         avatar: AvatarSrc,
     },
     {
         name: "Events",
-        description: '2 new',
+        details: '2 new',
         avatar: AvatarSrc,
     },
     {
         name: "Memories",
-        description: "7 new video",
+        details: "7 new video",
         avatar: AvatarSrc,
     },
     {
         name: "Saved",
-        description: '',
+        details: '',
         avatar: AvatarSrc,
     },
     {
         name: "Crisis Response",
-        description: '',
+        details: '',
         avatar: AvatarSrc,    },
 ]
 
@@ -50,15 +50,15 @@ const LeftRail = () => {
 
     return (
             <Fragment>
-                <ListElement name={"Patrocle"} description='' avatar={AvatarSrc}/>
+                <ListElement name={"Patrocle"} details='' avatar={AvatarSrc}/>
                 <List>
                     {groups.map((group, index) => (
-                        <ListElement key={index} name={group.name} description={group.description} avatar={group.avatar}/>
+                        <ListElement key={index} name={group.name} details={group.details} avatar={group.avatar}/>
                     ))}
                 </List>
-                <ListElement name={"See more"} description='' avatar={AvatarSrc}/>
+                <ListElement name={"See more"} details='' avatar={AvatarSrc}/>
                 <Divider variant="middle"/>
-                <ListElement name={"See more"} description='' avatar={AvatarSrc}/>
+                <ListElement name={"See more"} details='' avatar={AvatarSrc}/>
             </Fragment>
         );
 }

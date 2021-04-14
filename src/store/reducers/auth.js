@@ -3,12 +3,9 @@ import * as actionTypes from './../actions/actionTypes'
 const initialState = {
     userIsNotAuthenticated: false,
     userIsAuthenticated: false,
+    userId: null,
     token: localStorage.getItem('token') || '',
-    userProfileId: null,
     email: localStorage.getItem('email') || '',
-    userAvatar: null,
-    firstName: null,
-    lastName: null,
     timeoutTimer: null,
     authRedirectPath: '/',
     error: null
@@ -23,11 +20,8 @@ const authSuccess = (state, action) => {
     return {
         ...state,
         token: action.token,
-        userProfileId: action.userProfileId,
         email: action.email,
-        userAvatar: action.userAvatar,
-        firstName: action.firstName,
-        lastName: action.lastName,
+        userId: action.userId,
         timeoutTimer: action.timeoutTimer,
         userIsNotAuthenticated: false,
         userIsAuthenticated: true,
@@ -37,6 +31,7 @@ const authLogout = (state, action) => {
     return {
         ...initialState,
         userIsNotAuthenticated: true,
+        userIsAuthenticated: false,
     }
 }
 const authError = (state, action) => {
@@ -47,15 +42,13 @@ const authError = (state, action) => {
         userIsAuthenticated: false,
     }
 }
-const authTimeout = (state, action) => {
-    return {
-        ...state
-    }
-}
 const authUpdateTimeout = (state, action) => {
     return {
         ...state,
-        timeoutTimer: action.timeoutTimer
+        userId: action.userId,
+        timeoutTimer: action.timerTimeout,
+        userIsNotAuthenticated: false,
+        userIsAuthenticated: true,
     }
 }
 const reducer = (state = initialState, action) => {
@@ -69,7 +62,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.AUTH_ERROR:
             return authError(state, action);
         case actionTypes.AUTH_TIMEOUT:
-            return authTimeout(state, action);
+            return authLogout(state, action);
         case actionTypes.AUTH_UPDATE_TIMEOUT:
             return authUpdateTimeout(state, action);
         default:

@@ -3,7 +3,36 @@ import {Typography} from '@material-ui/core'
 import ListElement from './ListElement'
 //import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import AvatarSrc from "./../assets/gift.png"
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import {fade, makeStyles} from '@material-ui/core/styles'
+import Icon from '@material-ui/core/Icon'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
+const useStyles = makeStyles((theme)=>({
+    listItem: {
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.black, 0.09),
+        },
+        '&:active': {
+            backgroundColor: fade(theme.palette.common.black, 0.13),
+        },
+        borderRadius: 5,
+        maxHeight: '56px',
+        userSelect: 'none',
+    },
+    icon: {
+        backgroundColor: fade(theme.palette.common.black, 0.09),
+        borderRadius: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '40px',
+        width: '40px',
+    }
+}))
 function setBold(word, index) {
     if(index === 0) {
         // return <Typography variant='subtitle2'>{word}</Typography>
@@ -17,6 +46,7 @@ function setBold(word, index) {
 }
 
 const BirthdayCard = ({title, names}) => {
+    const classes = useStyles()
     let formatedNames = [];
     let avatar = AvatarSrc;
     const oneElem = names.length === 1
@@ -62,12 +92,37 @@ const BirthdayCard = ({title, names}) => {
 return (
         <Fragment>
             <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>{title}</Typography>
-            <ListElement
+            <ListItem className = {classes.listItem}>
+            <ListItemAvatar>
+                { avatar === null ? 
+                      <Icon className={classes.icon}><AccountCircleIcon  style={{ fontSize: 48 }} /></Icon>
+                    : typeof(avatar) === 'object' 
+                    ? <Icon className={classes.icon}>{avatar}</Icon> //material ui icon
+                    : <Avatar alt={avatar} src={avatar}/> //path to the image
+                }
+            </ListItemAvatar>
+            <ListItemText 
+                disableTypography
+                primary ={
+                    typeof(formatedNames) === 'string' 
+                        ?<Typography variant='subtitle1' style={{lineHeight: 1,}}>{formatedNames}</Typography>
+                        : formatedNames
+                }
+                // secondary={
+                //     typeof(formatedNames) === 'string' 
+                //         ? <Typography variant='caption' color='primary'>
+                //             {description}
+                //           </Typography>
+                //         : description
+                // }
+            />
+        </ListItem>
+            {/* <ListElement
                 name={formatedNames}
                 description = '' 
                 avatar={avatar}
                 type='birthday'
-            />
+            /> */}
         </Fragment>
     )
 }

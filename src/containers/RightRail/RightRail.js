@@ -20,7 +20,7 @@ const RightRail = () => {
             <Divider variant='middle'/>
             <List>
                 <Typography variant='subtitle1' style={{fontWeight: 500, paddingLeft: '16px'}}>Group conversations</Typography>
-                <ListElement name={'Create New Group'} description='' avatar={<AddRoundedIcon/>}/>
+                <ListElement name={'Create New Group'} details='' avatar={<AddRoundedIcon/>}/>
             </List>
         </Fragment>
         );

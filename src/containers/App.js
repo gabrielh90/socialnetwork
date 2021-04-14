@@ -9,57 +9,55 @@ import Spinner from './../components/Spinner'
 import * as actions from './../store/actions'
 import RecoverPassword from '../components/RecoverPassword/RecoverPassword';
 import { useEffect } from 'react';
-import { useState } from 'react';
 import axios from './../shared/axios-base'
 
 function App(props) {
     useEffect(() => {
-            props.onTryAutoSignup(props.history.location.pathname);
-            const requestInterceptor = axios.interceptors.request.use( req => {
-                if (props.token !== '') {
-                    req.headers['Authorization'] = 'Bearer ' + props.token;
-                    // if (req.data.constructor.name === 'FormData') {
-                    //     req.data.append('token', props.token);
-                    // } else {
-                    //     req.data = { ...req.data, token: props.token}
-                    // }
-                }
-                console.log(req);
-                return req;
-            } );
-            const responseInterceptor = axios.interceptors.response.use(
-                res => {
-                    console.log(res);
-                    return res
-                },
-                error => {
-                    console.log(error);
-                    return Promise.reject(error);
-                } );
-
-            return () => {
-                axios.interceptors.request.eject( requestInterceptor );
-                axios.interceptors.response.eject( responseInterceptor );
+        props.updateTokenTimeout();
+        // props.getHeaderInfo(props.history.location.pathname);
+        const requestInterceptor = axios.interceptors.request.use( req => {
+            const token = localStorage.getItem('token');
+            if (props.token !== '') {
+                req.headers['Authorization'] = 'Bearer ' + props.token;
+                // if (req.data.constructor.name === 'FormData') {
+                //     req.data.append('token', props.token);
+                // } else {
+                //     req.data = { ...req.data, token: props.token}
+                // }
+            } else if (token !== '') {
+                req.headers['Authorization'] = `Bearer ${token}`;
+                // if (req.data.constructor.name === 'FormData') {
+                //     req.data.append('token', props.token);
+                // } else {
+                //     req.data = { ...req.data, token: props.token}
+                // }
             }
-            },[])
+            console.log(req);
+            return req;
+        });
+        const responseInterceptor = axios.interceptors.response.use(
+            res => {
+                console.log(res);
+                return res
+            },
+            error => {
+                console.log(error);
+                return Promise.reject(error);
+            } );
+
+        return () => {
+            axios.interceptors.request.eject( requestInterceptor );
+            axios.interceptors.response.eject( responseInterceptor );
+        }
+    },[])
 
     const NavigationRoutes = () => {
-        
-        // console.log(token); //when is not innexistent is null
-        // console.log(email); //when is not innexistent is null
-        // console.log(props.history.location.pathname); //when is not innexistent is null
-
         // let routes = (<Route path='/' component={AppLayout}></Route>);
         let routes = (
             <Switch>
                 <Route path='/' component={Spinner}></Route>
             </Switch>
         )
-        if(props.token === '' && props.history.location.pathname === '/') {
-            routes = (
-                <Route path='/' component={LogInPage}></Route>
-            )
-        }
         if(props.userIsNotAuthenticated === true) {
             routes = (
                 <Switch>
@@ -97,10 +95,10 @@ const mapStateToProps = state => {
         userIsAuthenticated: state.auth.userIsAuthenticated,
     }
 }
-
 const mapDispatchToProps = dispatch => {
     return {
-        onTryAutoSignup: (url) => dispatch(actions.tokenAuthRequest(url))
+        updateTokenTimeout: () => dispatch(actions.updateTokenTimeout()),
+        getHeaderInfo: () => dispatch(actions.fetchHeaderInfo()),
     }
 }
 

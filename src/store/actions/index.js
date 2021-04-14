@@ -1,10 +1,15 @@
 export {
     logout,
-    tokenAuthRequest,
-    tokenAuthRequestFetchPage,
+    // tokenAuthRequest,
+    // tokenAuthRequestFetchPage,
+    updateTokenTimeout,
     passwordAuthRequest
 } from './auth'
-export  {
+export {
     fetchPage,
-    updateFields
+    pageContentUpdate,
+    updateLocalAndDBFields
 } from './currentPage'
+export {
+    fetchHeaderInfo
+} from './header'
