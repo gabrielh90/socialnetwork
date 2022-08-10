@@ -1,2 +1,2 @@
 # socialnetwork
-Connect with the others
+Connect with others
